@@ -115,7 +115,7 @@ export default function Router() {
            { path: 'profile', element: <UserProfile /> },
            { path: 'cards', element: <UserCards /> },
            { path: 'list', element: <UserList /> },
-           { path: 'new', element: <UserCreate /> },
+           { path: 'new', element: <BrandCreate /> },
            { path: '/:name/edit', element: <BrandCreate /> },
            { path: 'account', element: <UserAccount /> }
          ]

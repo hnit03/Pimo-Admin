@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 // utils
 import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
+import Cookies from 'universal-cookie';
+import JSCookies from 'js-cookie';
 
 // ----------------------------------------------------------------------
 
@@ -67,14 +69,16 @@ function AuthProvider({ children }) {
    useEffect(() => {
       const initialize = async () => {
          try {
-            const accessToken = window.localStorage.getItem('accessToken');
+            // const accessToken = window.localStorage.getItem('accessToken');
+            const accessToken = JSCookies.get('jwt')
             console.log(accessToken);
 
-            if (accessToken && isValidToken(accessToken)) {
-               setSession(accessToken);
+            if (accessToken) {
+               // setSession(accessToken);
 
-               const response = await axios.get('/api/account/my-account');
-               const { user } = response.data;
+               // const response = await axios.get('/api/account/my-account');
+               // const { user } = response.data;
+               const user = JSON.parse(JSCookies.get('user'));
 
                dispatch({
                   type: 'INITIALIZE',
@@ -108,9 +112,12 @@ function AuthProvider({ children }) {
    }, []);
 
    const login = async () => {
+      const cookies = new Cookies();
       const response = await axios.post('/api/account/login');
       const { accessToken, user } = response.data;
-      setSession(accessToken);
+      cookies.set('user', user, { path: '/', maxAge: 60 * 60 * 1000 });
+      cookies.set('jwt', accessToken, { path: '/', maxAge: 60 * 60 * 1000 });
+      // setSession(user);
       dispatch({
          type: 'LOGIN',
          payload: {

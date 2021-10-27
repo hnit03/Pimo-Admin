@@ -30,7 +30,7 @@ import {
 
 export default function UserAccount() {
   const { themeStretch } = useSettings();
-  const [currentTab, setCurrentTab] = useState('general');
+  const [currentTab, setCurrentTab] = useState('Tổng quan');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,30 +43,30 @@ export default function UserAccount() {
 
   const ACCOUNT_TABS = [
     {
-      value: 'general',
+      value: 'Tổng quan',
       icon: <Icon icon={roundAccountBox} width={20} height={20} />,
       component: <AccountGeneral />
     },
     {
-      value: 'billing',
+      value: 'Thanh toán',
       icon: <Icon icon={roundReceipt} width={20} height={20} />,
       component: <AccountBilling />
     },
+   //  {
+   //    value: 'Thông báo',
+   //    icon: <Icon icon={bellFill} width={20} height={20} />,
+   //    component: <AccountNotifications />
+   //  },
     {
-      value: 'notifications',
-      icon: <Icon icon={bellFill} width={20} height={20} />,
-      component: <AccountNotifications />
-    },
-    {
-      value: 'social_links',
+      value: 'Mạng xã hội',
       icon: <Icon icon={shareFill} width={20} height={20} />,
       component: <AccountSocialLinks />
     },
-    {
-      value: 'change_password',
-      icon: <Icon icon={roundVpnKey} width={20} height={20} />,
-      component: <AccountChangePassword />
-    }
+   //  {
+   //    value: 'change_password',
+   //    icon: <Icon icon={roundVpnKey} width={20} height={20} />,
+   //    component: <AccountChangePassword />
+   //  }
   ];
 
   const handleChangeTab = (event, newValue) => {
@@ -79,9 +79,9 @@ export default function UserAccount() {
         <HeaderBreadcrumbs
           heading="Account"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
-            { name: 'Account Settings' }
+            { name: 'Trang chủ', href: PATH_DASHBOARD.root },
+            { name: 'Người dùng', href: PATH_DASHBOARD.user.root },
+            { name: 'Chỉnh sửa thông tin' }
           ]}
         />
 
@@ -94,7 +94,7 @@ export default function UserAccount() {
             onChange={handleChangeTab}
           >
             {ACCOUNT_TABS.map((tab) => (
-              <Tab disableRipple key={tab.value} label={capitalCase(tab.value)} icon={tab.icon} value={tab.value} />
+              <Tab disableRipple key={tab.value} label={(tab.value)} icon={tab.icon} value={tab.value} />
             ))}
           </Tabs>
 

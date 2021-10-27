@@ -85,14 +85,14 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
               <TextField
                 fullWidth
-                label="Full Name"
+                label="Họ và tên"
                 {...getFieldProps('receiver')}
                 error={Boolean(touched.receiver && errors.receiver)}
                 helperText={touched.receiver && errors.receiver}
               />
               <TextField
                 fullWidth
-                label="Phone Number"
+                label="Số điện thoại"
                 {...getFieldProps('phone')}
                 error={Boolean(touched.phone && errors.phone)}
                 helperText={touched.phone && errors.phone}
@@ -101,7 +101,7 @@ export default function CheckoutNewAddressForm({ open, onClose, onNextStep, onCr
 
             <TextField
               fullWidth
-              label="Address"
+              label="Địa chỉ"
               {...getFieldProps('address')}
               error={Boolean(touched.address && errors.address)}
               helperText={touched.address && errors.address}

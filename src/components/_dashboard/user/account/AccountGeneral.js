@@ -106,22 +106,22 @@ export default function AccountGeneral() {
                       color: 'text.secondary'
                     }}
                   >
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
+                    Cho phép file dạng *.jpeg, *.jpg, *.png, *.gif
+                    <br /> với kích thước tối đa {fData(3145728)}
                   </Typography>
                 }
               />
 
-              <FormHelperText error sx={{ px: 2, textAlign: 'center' }}>
+              {/* <FormHelperText error sx={{ px: 2, textAlign: 'center' }}>
                 {touched.photoURL && errors.photoURL}
-              </FormHelperText>
+              </FormHelperText> */}
 
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Switch {...getFieldProps('isPublic')} color="primary" />}
                 labelPlacement="start"
                 label="Public Profile"
                 sx={{ mt: 5 }}
-              />
+              /> */}
             </Card>
           </Grid>
 
@@ -129,21 +129,21 @@ export default function AccountGeneral() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={{ xs: 2, md: 3 }}>
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                  <TextField fullWidth label="Name" {...getFieldProps('displayName')} />
-                  <TextField fullWidth disabled label="Email Address" {...getFieldProps('email')} />
+                  <TextField fullWidth label="Tên" {...getFieldProps('displayName')} />
+                  <TextField fullWidth disabled label="Email" {...getFieldProps('email')} />
                 </Stack>
 
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                  <TextField fullWidth label="Phone Number" {...getFieldProps('phoneNumber')} />
-                  <TextField fullWidth label="Address" {...getFieldProps('address')} />
+                  <TextField fullWidth label="Số điện thoại" {...getFieldProps('phoneNumber')} />
+                  <TextField fullWidth label="Địa chỉ" {...getFieldProps('address')} />
                 </Stack>
 
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
                   <TextField
                     select
                     fullWidth
-                    label="Country"
-                    placeholder="Country"
+                    label="Quốc gia"
+                    placeholder="Quốc gia"
                     {...getFieldProps('country')}
                     SelectProps={{ native: true }}
                     error={Boolean(touched.country && errors.country)}
@@ -156,20 +156,20 @@ export default function AccountGeneral() {
                       </option>
                     ))}
                   </TextField>
-                  <TextField fullWidth label="State/Region" {...getFieldProps('state')} />
+                  <TextField fullWidth label="Tỉnh" {...getFieldProps('state')} />
                 </Stack>
 
                 <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                  <TextField fullWidth label="City" {...getFieldProps('city')} />
-                  <TextField fullWidth label="Zip/Code" {...getFieldProps('zipCode')} />
+                  <TextField fullWidth label="Thành phố" {...getFieldProps('city')} />
+                  <TextField fullWidth label="Mã vùng" {...getFieldProps('zipCode')} />
                 </Stack>
 
-                <TextField {...getFieldProps('about')} fullWidth multiline minRows={4} maxRows={4} label="About" />
+                <TextField {...getFieldProps('about')} fullWidth multiline minRows={4} maxRows={4} label="Mô tả" />
               </Stack>
 
               <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                 <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                  Save Changes
+                Lưu thay đổi
                 </LoadingButton>
               </Box>
             </Card>

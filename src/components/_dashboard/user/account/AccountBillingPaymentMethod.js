@@ -23,7 +23,7 @@ export default function AccountBillingPaymentMethod({ formik, cards, isOpen, onO
   return (
     <Card sx={{ p: 3 }}>
       <Typography variant="overline" sx={{ mb: 3, display: 'block', color: 'text.secondary' }}>
-        Payment Method
+        Phương thức thanh toán
       </Typography>
 
       <Stack spacing={2} direction={{ xs: 'column', md: 'row' }}>
@@ -59,7 +59,7 @@ export default function AccountBillingPaymentMethod({ formik, cards, isOpen, onO
 
       <Box sx={{ mt: 3 }}>
         <Button size="small" startIcon={<Icon icon={plusFill} />} onClick={onOpen}>
-          Add new card
+          Thêm thẻ mới
         </Button>
       </Box>
 
@@ -75,12 +75,12 @@ export default function AccountBillingPaymentMethod({ formik, cards, isOpen, onO
           <FormikProvider value={formik}>
             <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
               <Stack spacing={3}>
-                <Typography variant="subtitle1">Add new card</Typography>
+                <Typography variant="subtitle1">Thêm thẻ mới</Typography>
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                   <TextField
                     fullWidth
-                    label="Name on card"
+                    label="Tên chủ thẻ"
                     {...getFieldProps('cardName')}
                     error={Boolean(touched.cardName && errors.cardName)}
                     helperText={touched.cardName && errors.cardName}
@@ -88,7 +88,7 @@ export default function AccountBillingPaymentMethod({ formik, cards, isOpen, onO
 
                   <TextField
                     fullWidth
-                    label="Card number"
+                    label="Mã số thẻ"
                     {...getFieldProps('cardNumber')}
                     error={Boolean(touched.cardNumber && errors.cardNumber)}
                     helperText={touched.cardNumber && errors.cardNumber}
@@ -98,7 +98,7 @@ export default function AccountBillingPaymentMethod({ formik, cards, isOpen, onO
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                   <TextField
                     fullWidth
-                    label="Expiration date"
+                    label="Ngày hết hạn"
                     placeholder="MM/YY"
                     {...getFieldProps('cardExpired')}
                     error={Boolean(touched.cardExpired && errors.cardExpired)}
@@ -107,7 +107,7 @@ export default function AccountBillingPaymentMethod({ formik, cards, isOpen, onO
 
                   <TextField
                     fullWidth
-                    label="Cvv"
+                    label="Mã CVV"
                     {...getFieldProps('cardCvv')}
                     error={Boolean(touched.cardCvv && errors.cardCvv)}
                     helperText={touched.cardCvv && errors.cardCvv}
@@ -116,10 +116,10 @@ export default function AccountBillingPaymentMethod({ formik, cards, isOpen, onO
 
                 <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
                   <Button type="button" color="inherit" variant="outlined" onClick={onCancel}>
-                    Cancel
+                    Hủy
                   </Button>
                   <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    Save Change
+                    Lưu thay đổi
                   </LoadingButton>
                 </Stack>
               </Stack>

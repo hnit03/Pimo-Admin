@@ -58,7 +58,7 @@ export default function AccountBilling() {
     <Grid container spacing={5}>
       <Grid item xs={12} md={8}>
         <Stack spacing={3}>
-          <Card sx={{ p: 3 }}>
+          {/* <Card sx={{ p: 3 }}>
             <Typography variant="overline" sx={{ mb: 3, display: 'block', color: 'text.secondary' }}>
               Your Plan
             </Typography>
@@ -78,7 +78,7 @@ export default function AccountBilling() {
                 Upgrade plan
               </Button>
             </Box>
-          </Card>
+          </Card> */}
 
           <AccountBillingPaymentMethod
             cards={cards}
@@ -88,7 +88,8 @@ export default function AccountBilling() {
             onCancel={handleCancel}
           />
 
-          <AccountBillingAddressBook addressBook={addressBook} />
+          {/* <AccountBillingAddressBook addressBook={addressBook} /> */}
+          
         </Stack>
       </Grid>
 
