@@ -257,4 +257,28 @@ const countries = [
   { code: 'ZW', label: 'Zimbabwe', phone: '263' }
 ];
 
+export const hairColor = [
+   {
+     title:'đen'
+   },
+   {
+     title:'đen'
+   },
+   {
+     title:'đen'
+   },
+   {
+     title:'đen'
+   },
+   {
+     title:'đen'
+   },
+    {
+     title:'đen'
+   },
+   {
+     title:'khác'
+   },
+ ]
+
 export default countries;

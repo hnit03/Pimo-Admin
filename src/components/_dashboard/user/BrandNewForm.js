@@ -5,6 +5,7 @@ import { useCallback } from 'react';
 import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik } from 'formik';
+import JSCookies from 'js-cookie';
 import axios from 'axios';
 // material
 import { LoadingButton } from '@material-ui/lab';
@@ -41,13 +42,11 @@ export default function BrandNewForm({ isEdit, currentUser }) {
    const { enqueueSnackbar } = useSnackbar();
 
    const NewUserSchema = Yup.object().shape({
-      name: Yup.string().required('Tên nhãn hàng'),
+      name: Yup.string().required('Tên nhãn hàng là bắt buộc'),
       email: Yup.string().required('Email là bắt buộc').email(),
       phoneNumber: Yup.string().required('Điện thoại là bắt buộc'),
-      address: Yup.string().required('Địa chỉ là bắt buộc'),
       country: Yup.string().required('Quốc gia là bắt buộc'),
       company: Yup.string().required('Công ty là bắt buộc'),
-      state: Yup.string().required('Tỉnh là bắt buộc'),
       city: Yup.string().required('Thành phố là bắt buộc'),
       role: Yup.string().required('Lĩnh vực là bắt buộc'),
       avatarUrl: Yup.mixed().required('Avatar là bắt buộc')
@@ -56,6 +55,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
    const formik = useFormik({
       enableReinitialize: true,
       initialValues: {
+         id: currentUser?.id || 0,
          name: currentUser?.name || '',
          email: currentUser?.email || '',
          phoneNumber: currentUser?.phoneNumber || '',
@@ -73,11 +73,78 @@ export default function BrandNewForm({ isEdit, currentUser }) {
       validationSchema: NewUserSchema,
       onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
          try {
-            await fakeRequest(500);
-            resetForm();
-            setSubmitting(false);
-            enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-            navigate(PATH_DASHBOARD.user.list);
+            if (values.status === 'active' || values.status === undefined) {
+               values.status = true;
+            } else {
+               values.status = false;
+            }
+            var result = false
+            const accessToken = JSCookies.get('jwt')
+            if (isEdit === false) {
+               const formData = new FormData()
+               formData.append('id', 1)
+               formData.append('pageNo', 1)
+               formData.append('logo', values.avatarUrl.file)
+               formData.append('name', values.name)
+               formData.append('description', values.city)
+               formData.append('status', 1)
+               formData.append('brandCateId', values.company)
+               formData.append('mail', values.email)
+               formData.append('address', values.role)
+               formData.append('phone', values.phoneNumber)
+               let axiosConfig = {
+                  headers: {
+                     "Content-Type": "multipart/form-data; boundary=AaB03x" +
+                        "--AaB03x" +
+                        "Content-Disposition: file" +
+                        "Content-Type: png" +
+                        "Content-Transfer-Encoding: binary" +
+                        "...data... " +
+                        "--AaB03x--",
+                     "Accept": "application/json",
+                     "type": "formData"
+                  }
+               };
+               try {
+                  console.log(formData.get('id'))
+                  console.log(await axios.post('https://a63f-27-70-155-55.ngrok.io/api/v1/models/test', formData, axiosConfig));
+               } catch (error) {
+                  result = false;
+               }
+            } else {
+               var postData = {
+                  id: values.id,
+                  name: values.name,
+                  description: values.city,
+                  status: true,
+                  brandCateId: values.company,
+                  mail: values.email,
+                  address: values.role,
+                  phone: values.phoneNumber,
+                  logo: ''
+               };
+               let axiosConfig = {
+                  headers: {
+                     'Content-Type': 'application/json;charset=UTF-8',
+                     "Access-Control-Allow-Origin": "*",
+                     'authorization': 'Bearer ' + accessToken
+                  }
+               };
+               try {
+                  result = (await axios.put('https://api.pimo.studio/api/v1/brands', postData, axiosConfig)).data.success;
+               } catch (error) {
+                  result = false;
+               }
+            }
+
+            if (result) {
+               resetForm();
+               setSubmitting(false);
+               enqueueSnackbar(!isEdit ? 'Thêm nhãn hàng thành công' : 'Cập nhật nhãn hàng thành công', { variant: 'success' });
+               navigate(PATH_DASHBOARD.brand.list);
+            } else {
+               enqueueSnackbar(!isEdit ? 'Thêm nhãn hàng thất bại' : 'Cập nhật nhãn hàng thất bại', { variant: 'error' });
+            }
          } catch (error) {
             console.error(error);
             setSubmitting(false);
@@ -94,8 +161,10 @@ export default function BrandNewForm({ isEdit, currentUser }) {
          if (file) {
             setFieldValue('avatarUrl', {
                ...file,
-               preview: URL.createObjectURL(file)
+               preview: URL.createObjectURL(file),
+               file: file,
             });
+            console.log(file);
          }
       },
       [setFieldValue]
@@ -118,16 +187,6 @@ export default function BrandNewForm({ isEdit, currentUser }) {
             <Grid container spacing={3}>
                <Grid item xs={12} md={4}>
                   <Card sx={{ py: 10, px: 3 }}>
-                     {isEdit && (
-                        <Label
-                           color={values.status !== 'active' ? 'error' : 'success'}
-                           sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
-                        >
-                           {((values.status === 'banned') ? 'Ngừng hoạt động' : 'Hoạt động')}
-                           {/* {values.status} */}
-                        </Label>
-                     )}
-
                      <Box sx={{ mb: 5 }}>
                         <UploadAvatar
                            accept="image/*"
@@ -135,6 +194,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                            maxSize={3145728}
                            onDrop={handleDrop}
                            error={Boolean(touched.avatarUrl && errors.avatarUrl)}
+                           disabled={isEdit}
                            caption={
                               <Typography
                                  variant="caption"
@@ -155,33 +215,8 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                            {touched.avatarUrl && errors.avatarUrl}
                         </FormHelperText>
                      </Box>
-
-                     {isEdit && (
-                        <FormControlLabel
-                           labelPlacement="start"
-                           control={
-                              <Switch
-                                 onChange={(event) => setFieldValue('status', event.target.checked ? 'banned' : 'active')}
-                                 checked={values.status !== 'active'}
-                              />
-                           }
-                           label={
-                              <>
-                                 <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                                    Banned
-                                 </Typography>
-                                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                    Cấm nhãn hàng
-                                 </Typography>
-                              </>
-                           }
-                           sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
-                        />
-                     )}
-
                   </Card>
                </Grid>
-
                <Grid item xs={12} md={8}>
                   <Card sx={{ p: 3 }}>
                      <Stack spacing={3}>
@@ -192,6 +227,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('name')}
                               error={Boolean(touched.name && errors.name)}
                               helperText={touched.name && errors.name}
+                              disabled={isEdit}
                            />
                            <TextField
                               fullWidth
@@ -199,6 +235,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('email')}
                               error={Boolean(touched.email && errors.email)}
                               helperText={touched.email && errors.email}
+                              disabled={isEdit}
                            />
                         </Stack>
 
@@ -209,6 +246,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('phoneNumber')}
                               error={Boolean(touched.phoneNumber && errors.phoneNumber)}
                               helperText={touched.phoneNumber && errors.phoneNumber}
+                              disabled={isEdit}
                            />
                            <TextField
                               select
@@ -219,6 +257,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               SelectProps={{ native: true }}
                               error={Boolean(touched.country && errors.country)}
                               helperText={touched.country && errors.country}
+                              disabled={isEdit}
                            >
                               <option value="" />
                               {countries.map((option) => (
@@ -228,7 +267,6 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               ))}
                            </TextField>
                         </Stack>
-
                         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                            {(listCategory !== undefined && listCategory !== null) ? (
                               <TextField
@@ -240,12 +278,12 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                                  SelectProps={{ native: true }}
                                  error={Boolean(touched.company && errors.company)}
                                  helperText={touched.company && errors.company}
+                                 disabled={isEdit}
                               >
                                  <option value="" />
                                  {
-
                                     listCategory.map((option) => (
-                                       <option key={option.id} value={option.name}>
+                                       <option key={option.id} value={option.id}>
                                           {option.name}
                                        </option>
                                     ))
@@ -258,15 +296,23 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('role')}
                               error={Boolean(touched.role && errors.role)}
                               helperText={touched.role && errors.role}
+                              disabled={isEdit}
                            />
                         </Stack>
-
-                        <TextField {...getFieldProps('city')} fullWidth multiline minRows={4} maxRows={4} label="Mô tả" />
-                        <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                              {!isEdit ? 'Tạo mới' : 'Lưu thay đổi'}
-                           </LoadingButton>
-                        </Box>
+                        <TextField {
+                           ...getFieldProps('city')}
+                           fullWidth multiline
+                           minRows={4}
+                           maxRows={4}
+                           label="Mô tả"
+                           disabled={isEdit} />
+                        {!isEdit ? (
+                           <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
+                              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                                 Tạo mới
+                              </LoadingButton>
+                           </Box>
+                        ) : null}
                      </Stack>
                   </Card>
                </Grid>

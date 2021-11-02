@@ -53,7 +53,7 @@ export default function BrandMoreMenu({ onDelete, userName }) {
           <ListItemIcon>
             <Icon icon={editFill} width={24} height={24} />
           </ListItemIcon>
-          <ListItemText primary="Chỉnh sửa" primaryTypographyProps={{ variant: 'body2' }} />
+          <ListItemText primary="Xem thông tin" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
     </>

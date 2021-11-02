@@ -47,7 +47,7 @@ export default function UserMoreMenu({ onDelete, userName }) {
 
         <MenuItem
           component={RouterLink}
-          to={`${PATH_DASHBOARD.model.root}/${paramCase(userName)}/edit`}
+          to={`${PATH_DASHBOARD.casting.root}/${paramCase(userName)}/edit`}
           sx={{ color: 'text.secondary' }}
         >
           <ListItemIcon>

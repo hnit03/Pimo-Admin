@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getUserList, deleteUser, getBrandList } from '../../redux/slices/user';
+import { getUserList, deleteBrand, getBrandList } from '../../redux/slices/user';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -138,7 +138,7 @@ export default function UserList() {
    };
 
    const handleDeleteUser = (userId) => {
-      dispatch(deleteUser(userId));
+      dispatch(deleteBrand(userId));
    };
 
    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
@@ -154,14 +154,14 @@ export default function UserList() {
                heading="Danh sách nhãn hàng"
                links={[
                   { name: 'Trang chủ', href: PATH_DASHBOARD.root },
-                  { name: 'Nhãn hàng', href: PATH_DASHBOARD.user.root },
+                  { name: 'Nhãn hàng', href: PATH_DASHBOARD.brand.root },
                   { name: 'Danh sách' }
                ]}
                action={
                   <Button
                      variant="contained"
                      component={RouterLink}
-                     to={PATH_DASHBOARD.brand.newUser}
+                     to={PATH_DASHBOARD.brand.newBrand}
                      startIcon={<Icon icon={plusFill} />}
                   >
                      Thêm nhãn hàng

@@ -26,16 +26,16 @@ const MENU_OPTIONS = [
     icon: homeFill,
     linkTo: '/'
   },
-  {
-    label: 'Thông tin cá nhân',
-    icon: personFill,
-    linkTo: PATH_DASHBOARD.user.profile
-  },
-  {
-    label: 'Thiết lập',
-    icon: settings2Fill,
-    linkTo: PATH_DASHBOARD.user.account
-  }
+//   {
+//     label: 'Thông tin cá nhân',
+//     icon: personFill,
+//     linkTo: PATH_DASHBOARD.user.profile
+//   },
+//   {
+//     label: 'Thiết lập',
+//     icon: settings2Fill,
+//     linkTo: PATH_DASHBOARD.user.account
+//   }
 ];
 
 // ----------------------------------------------------------------------

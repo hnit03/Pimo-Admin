@@ -97,7 +97,7 @@ export default function Router() {
           ]
         },
         {
-          path: 'user',
+          path: 'model',
           children: [
             { path: '/', element: <Navigate to="/dashboard/user/profile" replace /> },
             { path: 'profile', element: <UserProfile /> },
@@ -109,12 +109,24 @@ export default function Router() {
           ]
         },
         {
+         path: 'casting',
+         children: [
+           { path: '/', element: <Navigate to="/dashboard/casting/profile" replace /> },
+           { path: 'profile', element: <UserProfile /> },
+           { path: 'cards', element: <UserCards /> },
+           { path: 'list', element: <CastingList /> },
+           { path: 'new', element: <CastingCreate /> },
+           { path: '/:name/edit', element: <CastingCreate /> },
+           { path: 'account', element: <UserAccount /> }
+         ]
+       },
+        {
          path: 'brand',
          children: [
            { path: '/', element: <Navigate to="/dashboard/brand/profile" replace /> },
            { path: 'profile', element: <UserProfile /> },
            { path: 'cards', element: <UserCards /> },
-           { path: 'list', element: <UserList /> },
+           { path: 'list', element: <UserProfile /> },
            { path: 'new', element: <BrandCreate /> },
            { path: '/:name/edit', element: <BrandCreate /> },
            { path: 'account', element: <UserAccount /> }
@@ -257,8 +269,10 @@ const BlogNewPost = Loadable(lazy(() => import('../pages/dashboard/BlogNewPost')
 const UserProfile = Loadable(lazy(() => import('../pages/dashboard/UserProfile')));
 const UserCards = Loadable(lazy(() => import('../pages/dashboard/UserCards')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
+const CastingList = Loadable(lazy(() => import('../pages/dashboard/CastingList')));
 const UserAccount = Loadable(lazy(() => import('../pages/dashboard/UserAccount')));
 const UserCreate = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
+const CastingCreate = Loadable(lazy(() => import('../pages/dashboard/CastingCreate')));
 const BrandCreate = Loadable(lazy(() => import('../pages/dashboard/BrandCreate')));
 const Chat = Loadable(lazy(() => import('../pages/dashboard/Chat')));
 const Mail = Loadable(lazy(() => import('../pages/dashboard/Mail')));

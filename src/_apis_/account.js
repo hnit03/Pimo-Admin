@@ -52,22 +52,8 @@ mock.onPost('/api/account/login').reply(async () => {
             };
             const axiosData = axios.post('https://api.pimo.studio/api/v1/auth', postData, axiosConfig)
                .then((res) => {
-                  console.log('result: ', res);
                   const user = {
-                     id: '8864c717-587d-472a-929a-8e5f298024da-0',
-                     displayName: 'Jaydon Frankie',
-                     email: 'demo@minimals.cc',
-                     // password: 'demo1234',
-                     photoURL: '/static/mock-images/avatars/avatar_default.jpg',
-                     phoneNumber: '+40 777666555',
-                     // country: 'United States',
-                     address: '90210 Broadway Blvd',
-                     // state: 'California',
-                     // city: 'San Francisco',
-                     // zipCode: '94116',
-                     about: faker.lorem.paragraphs(),
-                     role: 'admin',
-                     isPublic: true
+                     displayName: res.data.name,
                   }
                   const accessToken = res.data.jwt;
                   return [{ accessToken, user }];
@@ -78,8 +64,8 @@ mock.onPost('/api/account/login').reply(async () => {
             console.log(error);
          });
       const accessToken = authData[0].accessToken
-      const user = authData[0].user
-      return [200, { accessToken, user }];
+      const current_user = authData[0].user
+      return [200, { accessToken, current_user }];
    } catch (error) {
       console.error(error);
       return [500, { message: 'Internal server error' }];

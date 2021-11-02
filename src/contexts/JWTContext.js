@@ -5,6 +5,7 @@ import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 import Cookies from 'universal-cookie';
 import JSCookies from 'js-cookie';
+import jwt from 'jwt-decode';
 
 // ----------------------------------------------------------------------
 
@@ -69,24 +70,26 @@ function AuthProvider({ children }) {
    useEffect(() => {
       const initialize = async () => {
          try {
-            // const accessToken = window.localStorage.getItem('accessToken');
             const accessToken = JSCookies.get('jwt')
-            console.log(accessToken);
-
             if (accessToken) {
-               // setSession(accessToken);
-
-               // const response = await axios.get('/api/account/my-account');
-               // const { user } = response.data;
-               const user = JSON.parse(JSCookies.get('user'));
-
-               dispatch({
-                  type: 'INITIALIZE',
-                  payload: {
-                     isAuthenticated: true,
-                     user
-                  }
-               });
+               if (jwt(accessToken)[Object.keys(jwt(accessToken))[3]] === "Admin") {
+                  const user = JSON.parse(JSCookies.get('user'))
+                  dispatch({
+                     type: 'INITIALIZE',
+                     payload: {
+                        isAuthenticated: true,
+                        user
+                     }
+                  });
+               } else {
+                  dispatch({
+                     type: 'INITIALIZE',
+                     payload: {
+                        isAuthenticated: false,
+                        user: null
+                     }
+                  });
+               }
             } else {
                dispatch({
                   type: 'INITIALIZE',
@@ -114,16 +117,28 @@ function AuthProvider({ children }) {
    const login = async () => {
       const cookies = new Cookies();
       const response = await axios.post('/api/account/login');
-      const { accessToken, user } = response.data;
-      cookies.set('user', user, { path: '/', maxAge: 60 * 60 * 1000 });
-      cookies.set('jwt', accessToken, { path: '/', maxAge: 60 * 60 * 1000 });
-      // setSession(user);
-      dispatch({
-         type: 'LOGIN',
-         payload: {
-            user
+      const { accessToken, current_user } = response.data;
+      if (jwt(accessToken)[Object.keys(jwt(accessToken))[3]] === "Admin") {
+         cookies.set('jwt', accessToken, { path: '/', maxAge: 60 * 60 * 1000 });
+         cookies.set('user', current_user, { path: '/', maxAge: 60 * 60 * 1000 });
+         const user = {
+            about: '',
+            address: '',
+            displayName: current_user.displayName,
+            email: jwt(accessToken)[Object.keys(jwt(accessToken))[2]],
+            id: jwt(accessToken)[Object.keys(jwt(accessToken))[4]],
+            isPublic: true,
+            phoneNumber: '',
+            photoURL: '',
+            role: jwt(accessToken)[Object.keys(jwt(accessToken))[3]]
          }
-      });
+         dispatch({
+            type: 'LOGIN',
+            payload: {
+               user
+            }
+         });
+      }
    };
 
    const register = async (email, password, firstName, lastName) => {
@@ -145,7 +160,7 @@ function AuthProvider({ children }) {
    };
 
    const logout = async () => {
-      setSession(null);
+      JSCookies.remove('jwt')
       dispatch({ type: 'LOGOUT' });
    };
 

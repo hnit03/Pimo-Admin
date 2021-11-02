@@ -34,10 +34,10 @@ export default function UserCreate() {
     <Page title="User: Create a new user | Minimal-UI">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Tạo mới người mẫu' : 'Chỉnh sửa thông tin'}
+          heading={!isEdit ? 'Tạo mới người mẫu' : 'Xem thông tin người mẫu'}
           links={[
             { name: 'Trang chủ', href: PATH_DASHBOARD.root },
-            { name: 'Người mẫu', href: PATH_DASHBOARD.user.root },
+            { name: 'Người mẫu', href: PATH_DASHBOARD.model.list },
             { name: !isEdit ? 'Tạo mới người mẫu' : name }
           ]}
         />

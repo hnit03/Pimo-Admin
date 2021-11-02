@@ -46,13 +46,13 @@ const sidebarConfig = [
       items: [
          // MANAGEMENT : USER
          {
-            title: 'Danh sách chiến dịch', path: PATH_DASHBOARD.user.cards,
+            title: 'Danh sách chiến dịch', path: PATH_DASHBOARD.casting.list,
          },
          {
-            title: 'Danh sách người mẫu', path: PATH_DASHBOARD.user.list,
+            title: 'Danh sách người mẫu', path: PATH_DASHBOARD.model.list,
          },
          {
-            title: 'Danh sách nhãn hàng', path: PATH_DASHBOARD.user.profile,
+            title: 'Danh sách nhãn hàng', path: PATH_DASHBOARD.brand.list,
          }
 
          // // MANAGEMENT : E-COMMERCE

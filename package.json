@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.16.1",
+    "@date-io/date-fns": "^2.11.0",
     "@emotion/cache": "^11.4.0",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
@@ -55,6 +56,9 @@
     "@material-ui/lab": "^5.0.0-alpha.40",
     "@material-ui/styles": "^5.0.0-beta.1",
     "@material-ui/utils": "^5.0.0-beta.0",
+    "@mui/icons-material": "^5.0.5",
+    "@mui/lab": "^5.0.0-alpha.53",
+    "@mui/material": "^5.0.6",
     "@react-pdf/renderer": "^2.0.16",
     "@reduxjs/toolkit": "^1.6.1",
     "@testing-library/jest-dom": "^5.14.1",

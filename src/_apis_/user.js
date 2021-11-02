@@ -5,6 +5,7 @@ import { mockImgCover, mockImgFeed, mockImgAvatar } from '../utils/mockImages';
 //
 import mock from './mock';
 import axios from 'axios';
+import JSCookies from 'js-cookie';
 
 // ----------------------------------------------------------------------
 
@@ -67,59 +68,84 @@ mock.onGet('/api/user/all').reply(() => {
 // ----------------------------------------------------------------------
 
 mock.onGet('/api/user/manage-users').reply(async () => {
-   const { data } = await axios.get(`https://api.pimo.studio/api/v1/models`)
+   const accessToken = JSCookies.get('jwt')
+   let axiosConfig = {
+      headers: {
+         'Content-Type': 'application/json;charset=UTF-8',
+         "Access-Control-Allow-Origin": "*",
+         'authorization': 'Bearer ' + accessToken
+      }
+   };
+   var { data } = await axios.get(`https://api.pimo.studio/api/v1/models/admin`, axiosConfig)
+   var totalRow = data.totalRow;
+   var currentPage = 1
+   while (totalRow > 20) {
+      currentPage++
+      totalRow = totalRow - 20
+      const subList = (await axios.get(`https://api.pimo.studio/api/v1/models/admin?PageNo=${currentPage}`, axiosConfig)).data.modelList;
+      subList.map(model => (
+         data.modelList.push(model)
+      ));
+   }
    var NAME = []
    data.modelList.map(model => (
-      NAME.push(model.model.name)
-   ));
+      NAME.push(model.name)
+      ));
    var IMAGE = []
    data.modelList.map(model => (
-      IMAGE.push(model.model.avatar)
+      IMAGE.push(model.avatar)
    ));
    var ID = []
    data.modelList.map(model => (
-      ID.push(model.model.id)
+      ID.push(model.id)
    ));
    var EMAIL = []
    data.modelList.map(model => (
-      EMAIL.push(model.model.mail)
+      EMAIL.push(model.mail)
    ));
    var PHONE_NUMBER = []
    data.modelList.map(model => (
-      PHONE_NUMBER.push(model.model.phone)
+      PHONE_NUMBER.push(model.phone)
    ));
    var COUNTRY = []
    data.modelList.map(model => (
-      COUNTRY.push(model.model.country)
+      COUNTRY.push(model.country)
    ));
    var PROVINCE = []
    data.modelList.map(model => (
-      PROVINCE.push(model.model.province)
+      PROVINCE.push(model.province)
    ));
    var ADDRESS = []
    data.modelList.map(model => (
-      ADDRESS.push(model.model.district)
+      ADDRESS.push(model.district)
    ));
    var STATUS = []
    data.modelList.map(model => (
-      STATUS.push(model.model.status)
+      STATUS.push(model.status)
    ));
    var GIFTED = []
    data.modelList.map(model => (
-      GIFTED.push(model.model.gifted)
+      GIFTED.push(model.gifted)
    ));
-   const users = [...Array(20)].map((_, index) => {
-      const setIndex = index + 1;
+   var GENDER = []
+   data.modelList.map(model => (
+      GENDER.push(model.genderId)
+   ));
+   var DOB = []
+   data.modelList.map(model => (
+      DOB.push(model.dateOfBirth)
+   ));
+   const users = [...Array(data.modelList.length)].map((_, index) => {
       return {
-         id: createId(setIndex),
+         id: ID[index],
          avatarUrl: IMAGE[index],
          name: NAME[index],
          email: EMAIL[index],
          phoneNumber: PHONE_NUMBER[index],
          address: ADDRESS[index],
          country: 'Vietnam',
-         state: faker.address.state(),
-         city: faker.address.city(),
+         state: DOB[index],
+         city: GENDER[index],
          zipCode: faker.address.zipCodeByState(),
          company: GIFTED[index],
          isVerified: true,
@@ -127,13 +153,32 @@ mock.onGet('/api/user/manage-users').reply(async () => {
          role: ADDRESS[index] + ', ' + COUNTRY[index]
       }
    })
+   
    return [200, { users }];
 });
 
 // ----------------------------------------------------------------------
 
 mock.onGet('/api/user/manage-brands').reply(async () => {
-   const { data } = await axios.get(`https://api.pimo.studio/api/v1/brands`)
+   const accessToken = JSCookies.get('jwt')
+   let axiosConfig = {
+      headers: {
+         'Content-Type': 'application/json;charset=UTF-8',
+         "Access-Control-Allow-Origin": "*",
+         'authorization': 'Bearer ' + accessToken
+      }
+   };
+   var { data } = await axios.get(`https://api.pimo.studio/api/v1/brands/admin`, axiosConfig)
+   var totalRow = data.totalRow;
+   var currentPage = 1
+   while (totalRow > 20) {
+      currentPage++
+      totalRow = totalRow - 20
+      const subList = (await axios.get(`https://api.pimo.studio/api/v1/brands/admin?PageNo=${currentPage}`, axiosConfig)).data.brandList;
+      subList.map(brand => (
+         data.brandList.push(brand)
+      ));
+   }
    var NAME = []
    data.brandList.map(brand => (
       NAME.push(brand.brand.name)
@@ -170,10 +215,9 @@ mock.onGet('/api/user/manage-brands').reply(async () => {
    data.brandList.map(brand => (
       DESCRIPTION.push(brand.brand.description)
    ));
-   const users = [...Array(20)].map((_, index) => {
-      const setIndex = index + 1;
+   const users = [...Array(data.totalRow)].map((_, index) => {
       return {
-         id: createId(setIndex),
+         id: ID[index],
          avatarUrl: IMAGE[index],
          name: NAME[index],
          email: EMAIL[index],
@@ -183,6 +227,93 @@ mock.onGet('/api/user/manage-brands').reply(async () => {
          country: 'Vietnam',
          city: DESCRIPTION[index],
          zipCode: faker.address.zipCodeByState(),
+         company: GIFTED[index],
+         isVerified: true,
+         status: STATUS[index] ? ('active') : ('banned'),
+         role: ADDRESS[index],
+      }
+   })
+   return [200, { users }];
+});
+
+// ----------------------------------------------------------------------
+
+mock.onGet('/api/user/manage-castings').reply(async () => {
+   const accessToken = JSCookies.get('jwt')
+   let axiosConfig = {
+      headers: {
+         'Content-Type': 'application/json;charset=UTF-8',
+         "Access-Control-Allow-Origin": "*",
+         'authorization': 'Bearer ' + accessToken
+      }
+   };
+   var { data } = await axios.get(`https://api.pimo.studio/api/v1/castings/admin`, axiosConfig)
+   var totalRow = data.totalRow;
+   var currentPage = 1
+   while (totalRow > 20) {
+      currentPage++
+      totalRow = totalRow - 20
+      const subList = (await axios.get(`https://api.pimo.studio/api/v1/castings/admin?PageNo=${currentPage}`, axiosConfig)).data.castings;
+      subList.map(brand => (
+         data.castings.push(brand)
+      ));
+   }
+   var NAME = []
+   data.castings.map(brand => (
+      NAME.push(brand.casting.name)
+   ));
+   var IMAGE = []
+   data.castings.map(brand => (
+      IMAGE.push(brand.casting.poster)
+   ));
+   var ID = []
+   data.castings.map(brand => (
+      ID.push(brand.casting.id)
+   ));
+   var EMAIL = []
+   data.castings.map(brand => (
+      EMAIL.push(brand.casting.mail)
+   ));
+   var PHONE_NUMBER = []
+   data.castings.map(brand => (
+      PHONE_NUMBER.push(brand.casting.phone)
+   ));
+   var ADDRESS = []
+   data.castings.map(brand => (
+      ADDRESS.push(brand.casting.address)
+   ));
+   var STATUS = []
+   data.castings.map(brand => (
+      STATUS.push(brand.casting.status)
+   ));
+   var GIFTED = []
+   data.castings.map(brand => (
+      GIFTED.push(brand.casting.brand.name)
+   ));
+   var DESCRIPTION = []
+   data.castings.map(brand => (
+      DESCRIPTION.push(brand.casting.description)
+   ));
+   var OPENTIME = []
+   data.castings.map(brand => (
+      OPENTIME.push(brand.casting.openTime)
+   ));
+   var CLOSETIME = []
+   data.castings.map(brand => (
+      CLOSETIME.push(brand.casting.closeTime)
+   ));
+   const users = [...Array(data.totalRow)].map((_, index) => {
+      return {
+         id: ID[index],
+         avatarUrl: IMAGE[index],
+         name: NAME[index],
+         email: EMAIL[index],
+         phoneNumber: PHONE_NUMBER[index],
+         address: ADDRESS[index],
+         state: OPENTIME[index],
+         country: 'Vietnam',
+         city: DESCRIPTION[index],
+         zipCode: CLOSETIME[index],
          company: GIFTED[index],
          isVerified: true,
          status: STATUS[index] ? ('active') : ('banned'),
