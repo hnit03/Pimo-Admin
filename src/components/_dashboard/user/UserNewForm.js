@@ -194,7 +194,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                            maxSize={3145728}
                            onDrop={handleDrop}
                            error={Boolean(touched.avatarUrl && errors.avatarUrl)}
-                           disabled={isEdit}
+                           disabled={true}
                            caption={
                               <Typography
                                  variant="caption"
