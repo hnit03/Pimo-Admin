@@ -49,7 +49,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
       company: Yup.string().required('Công ty là bắt buộc'),
       city: Yup.string().required('Thành phố là bắt buộc'),
       role: Yup.string().required('Lĩnh vực là bắt buộc'),
-      avatarUrl: Yup.mixed().required('Avatar là bắt buộc')
+      // avatarUrl: Yup.mixed().required('Avatar là bắt buộc')
    });
 
    const formik = useFormik({
@@ -81,33 +81,47 @@ export default function BrandNewForm({ isEdit, currentUser }) {
             var result = false
             const accessToken = JSCookies.get('jwt')
             if (isEdit === false) {
-               const formData = new FormData()
-               formData.append('id', 1)
-               formData.append('pageNo', 1)
-               formData.append('logo', values.avatarUrl.file)
-               formData.append('name', values.name)
-               formData.append('description', values.city)
-               formData.append('status', 1)
-               formData.append('brandCateId', values.company)
-               formData.append('mail', values.email)
-               formData.append('address', values.role)
-               formData.append('phone', values.phoneNumber)
+               // const formData = new FormData()
+               // formData.append('id', 1)
+               // formData.append('pageNo', 1)
+               // formData.append('logo', values.avatarUrl.file)
+               // formData.append('name', values.name)
+               // formData.append('description', values.city)
+               // formData.append('status', 1)
+               // formData.append('brandCateId', values.company)
+               // formData.append('mail', values.email)
+               // formData.append('address', values.role)
+               // formData.append('phone', values.phoneNumber)
+               // let axiosConfig = {
+               //    headers: {
+               //       "Content-Type": "multipart/form-data; boundary=AaB03x" +
+               //          "--AaB03x" +
+               //          "Content-Disposition: file" +
+               //          "Content-Type: png" +
+               //          "Content-Transfer-Encoding: binary" +
+               //          "...data... " +
+               //          "--AaB03x--",
+               //       "Accept": "application/json",
+               //       "type": "formData"
+               //    }
+               // };
+               var postData = {
+                  name: values.name,
+                  description: values.city,
+                  status: true,
+                  brandCateId: values.company,
+                  mail: values.email,
+                  address: values.role,
+                  phone: values.phoneNumber,
+               };
                let axiosConfig = {
                   headers: {
-                     "Content-Type": "multipart/form-data; boundary=AaB03x" +
-                        "--AaB03x" +
-                        "Content-Disposition: file" +
-                        "Content-Type: png" +
-                        "Content-Transfer-Encoding: binary" +
-                        "...data... " +
-                        "--AaB03x--",
-                     "Accept": "application/json",
-                     "type": "formData"
+                     'Content-Type': 'application/json;charset=UTF-8',
+                     "Access-Control-Allow-Origin": "*",
                   }
                };
                try {
-                  console.log(formData.get('id'))
-                  console.log(await axios.post('https://a63f-27-70-155-55.ngrok.io/api/v1/models/test', formData, axiosConfig));
+                  result = (await axios.post('https://api.pimo.studio/api/v1/brands', postData, axiosConfig)).data.success;;
                } catch (error) {
                   result = false;
                }

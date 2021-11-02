@@ -48,10 +48,10 @@ export default function UserNewForm({ isEdit, currentUser }) {
       address: Yup.string().required('Tỉnh là bắt buộc'),
       country: Yup.string().required('Quốc gia là bắt buộc'),
       // company: Yup.string().required('Công ty là bắt buộc'),
-      // state: Yup.string().required('Ngày sinh là bắt buộc'),
+      state: Yup.string().required('Ngày sinh là bắt buộc'),
       city: Yup.string().required('Giới tính là bắt buộc'),
       role: Yup.string().required('Địa chỉ là bắt buộc'),
-      avatarUrl: Yup.mixed().required('Avatar là bắt buộc')
+      // avatarUrl: Yup.mixed().required('Avatar là bắt buộc')
    });
 
    const formik = useFormik({
