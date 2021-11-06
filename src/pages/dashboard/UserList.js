@@ -40,10 +40,11 @@ import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_d
 
 const TABLE_HEAD = [
    { id: 'name', label: 'Tên', alignRight: false },
+   { id: 'city', label: 'Giới tính', alignRight: false },
    { id: 'company', label: 'Tài năng', alignRight: false },
    { id: 'role', label: 'Địa chỉ', alignRight: false },
-   { id: 'isVerified', label: 'Xác thực', alignRight: false },
-   { id: 'status', label: 'Hoạt động', alignRight: false },
+   // { id: 'isVerified', label: 'Xác thực', alignRight: false },
+   { id: 'status', label: 'Trạng thái', alignRight: false },
    { id: '' }
 ];
 
@@ -148,7 +149,7 @@ export default function UserList() {
    const isUserNotFound = filteredUsers.length === 0;
 
    return (
-      <Page title="User: List | Minimal-UI">
+      <Page title="Quản lý người mẫu">
          <Container maxWidth={themeStretch ? false : 'lg'}>
             <HeaderBreadcrumbs
                heading="Danh sách người mẫu"
@@ -186,7 +187,7 @@ export default function UserList() {
                         />
                         <TableBody>
                            {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                              const { id, name, role, status, company, avatarUrl, isVerified } = row;
+                              const { id, name, role, status, company, avatarUrl, isVerified, city } = row;
                               const isItemSelected = selected.indexOf(name) !== -1;
                               return (
                                  <TableRow
@@ -208,9 +209,10 @@ export default function UserList() {
                                           </Typography>
                                        </Stack>
                                     </TableCell>
+                                    <TableCell align="left">{(city === 0)? 'Khác' : (city === 1)? 'Nam':'Nữ'}</TableCell>
                                     <TableCell align="left">{company}</TableCell>
                                     <TableCell align="left">{role}</TableCell>
-                                    <TableCell align="left">{isVerified ? 'Đã xác thực' : 'Chưa xác thực'}</TableCell>
+                                    {/* <TableCell align="left">{isVerified ? 'Đã xác thực' : 'Chưa xác thực'}</TableCell> */}
                                     <TableCell align="left">
                                        <Label
                                           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}

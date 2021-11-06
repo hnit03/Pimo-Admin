@@ -23,7 +23,7 @@ import {
 } from '@material-ui/core';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCastingList, deleteEvent } from '../../redux/slices/user';
+import { getCastingList, deleteEvent, applyEvent } from '../../redux/slices/user';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -40,10 +40,12 @@ import { UserListHead, UserListToolbar, CastingMoreMenu } from '../../components
 
 const TABLE_HEAD = [
    { id: 'name', label: 'Tên', alignRight: false },
+   { id: 'zipCode', label: 'Ngày kết thúc', alignRight: false },
    { id: 'role', label: 'Địa chỉ', alignRight: false },
    { id: 'company', label: 'Thuộc nhãn hàng', alignRight: false },
-   { id: 'isVerified', label: 'Xác thực', alignRight: false },
-   { id: 'status', label: 'Hoạt động', alignRight: false },
+   // { id: 'isVerified', label: 'Xác thực', alignRight: false },
+   // { id: 'status', label: 'Hoạt động', alignRight: false },
+   { id: 'status', label: 'Trạng thái', alignRight: false },
    { id: '' }
 ];
 
@@ -141,6 +143,11 @@ export default function UserList() {
       dispatch(deleteEvent(userId));
    };
 
+   
+   const handleApplyUser = (userId) => {
+      dispatch(applyEvent(userId));
+   };
+
    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
 
    const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
@@ -148,7 +155,7 @@ export default function UserList() {
    const isUserNotFound = filteredUsers.length === 0;
 
    return (
-      <Page title="User: List | Minimal-UI">
+      <Page title="Quản lý chiến dịch">
          <Container maxWidth={themeStretch ? false : 'lg'}>
             <HeaderBreadcrumbs
                heading="Danh sách chiến dịch"
@@ -157,16 +164,16 @@ export default function UserList() {
                   { name: 'Chiến dịch', href: PATH_DASHBOARD.casting.list },
                   { name: 'Danh sách' }
                ]}
-               action={
-                  <Button
-                     variant="contained"
-                     component={RouterLink}
-                     to={PATH_DASHBOARD.casting.newUser}
-                     startIcon={<Icon icon={plusFill} />}
-                  >
-                     Thêm chiến dịch
-                  </Button>
-               }
+               // action={
+               //    <Button
+               //       variant="contained"
+               //       component={RouterLink}
+               //       to={PATH_DASHBOARD.casting.newUser}
+               //       startIcon={<Icon icon={plusFill} />}
+               //    >
+               //       Thêm chiến dịch
+               //    </Button>
+               // }
             />
 
             <Card>
@@ -203,30 +210,30 @@ export default function UserList() {
                                     <TableCell component="th" scope="row" padding="none">
                                        <Stack direction="row" alignItems="center" spacing={2}>
                                           <Avatar alt={name} src={avatarUrl} />
-                                          <Typography variant="subtitle2" noWrap>
+                                          <Typography style={{width: '15rem'}} variant="subtitle2" >
                                              {name}
                                           </Typography>
                                        </Stack>
                                     </TableCell>
+                                    <TableCell align="left">{(new Date(zipCode)).toLocaleDateString("vi-VN").toString()}</TableCell>
                                     <TableCell align="left">{role}</TableCell>
                                     <TableCell align="left">{company}</TableCell>
-                                    <TableCell align="left">{isVerified ? 'Đã xác thực' : 'Chưa xác thực'}</TableCell>
+                                    {/* <TableCell align="left">{isVerified ? 'Đã xác thực' : 'Chưa xác thực'}</TableCell> */}
                                     <TableCell align="left">
                                        <Label
                                           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-                                          color={(status === 'banned' && 'error') || ((new Date(zipCode) >= new Date())? 'success' : 'default')}
+                                          color={((new Date(zipCode) < new Date())? 'default' : (status === 'warning') ? 'warning': 'success')}
                                        >
                                           {
-                                             
-                                                ((status === 'banned') ? 'Ngừng hoạt động' : (
-                                                   (new Date(zipCode) >= new Date()) ? 'Đang hoạt động' : 'Đã hết hạn'
-                                                )) 
+                                                (
+                                                   (new Date(zipCode) < new Date()) ? 'Đã hết hạn' : (status === 'warning') ? 'Đang chờ duyệt' : 'Đang hoạt động'
+                                                ) 
                                           }
                                        </Label>
                                     </TableCell>
 
                                     <TableCell align="right">
-                                       <CastingMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                                       <CastingMoreMenu onDelete={() => handleDeleteUser(id)} onApply={() => handleApplyUser(id)} userName={name} status={status} zipCode={zipCode} />
                                     </TableCell>
                                  </TableRow>
                               );

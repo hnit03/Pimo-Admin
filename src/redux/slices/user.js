@@ -122,8 +122,39 @@ const slice = createSlice({
          const deleteUser = filter(state.userList, (user) => 1 === 1);
          deleteUser.map((user) => {
             if (user.id === action.payload) {
-               user.status = 'banned'
+               console.log(user.id);
+               console.log(action.payload);
+               user.status = 'warning'
             }
+         })
+         state.userList = deleteUser;
+      },
+
+      // DELETE EVENTS
+      applyEvent(state, action) {
+         const accessToken = JSCookies.get('jwt')
+         let axiosConfig = {
+            headers: {
+               'Content-Type': 'application/json;charset=UTF-8',
+               "Access-Control-Allow-Origin": "*",
+               'authorization': 'Bearer ' + accessToken,
+            }
+         };
+         try {
+            this_axios.put(`https://api.pimo.studio/api/v1/castings/admin`, action.payload, axiosConfig);
+         } catch (error) {
+            console.log(error);
+         }
+         const deleteUser = filter(state.userList, (user) => 1 === 1);
+         deleteUser.map((user) => {
+            if (user.id === action.payload) {
+               console.log(user.id);
+               console.log(action.payload);
+               user.status = 'active'
+            }
+         })
+         deleteUser.map((user) => {
+            console.log(user.status);
          })
          state.userList = deleteUser;
       },
@@ -199,7 +230,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { onToggleFollow, deleteUser, deleteBrand, deleteEvent } = slice.actions;
+export const { onToggleFollow, deleteUser, deleteBrand, deleteEvent, applyEvent } = slice.actions;
 
 // ----------------------------------------------------------------------
 

@@ -67,7 +67,7 @@ export default function AppNewInvoice() {
 
   return (
     <Card>
-      <CardHeader title="New Invoice" sx={{ mb: 3 }} />
+      <CardHeader title="Hoạt động mới" sx={{ mb: 3 }} />
       <Scrollbar>
         <TableContainer sx={{ minWidth: 720 }}>
           <Table>

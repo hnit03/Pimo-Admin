@@ -63,7 +63,7 @@ export default function AppWidgets2() {
       <Box sx={{ ml: 3, color: 'common.white' }}>
         <Typography variant="h4"> {fNumber(TOTAL)}</Typography>
         <Typography variant="body2" sx={{ opacity: 0.72 }}>
-          Conversion
+          Chuyển đổi
         </Typography>
       </Box>
       <IconStyle icon={emailFill} />

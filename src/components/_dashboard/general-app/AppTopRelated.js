@@ -113,7 +113,7 @@ function ApplicationItem({ app }) {
 export default function AppTopRelated() {
   return (
     <Card>
-      <CardHeader title="Top Related Applications" />
+      <CardHeader title="Top người mẫu" />
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
           {APPLICATIONS.map((app) => (

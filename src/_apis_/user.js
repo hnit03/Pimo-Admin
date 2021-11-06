@@ -304,22 +304,39 @@ mock.onGet('/api/user/manage-castings').reply(async () => {
    data.castings.map(brand => (
       CLOSETIME.push(brand.casting.closeTime)
    ));
+   var SALARY = []
+   data.castings.map(brand => (
+      SALARY.push(brand.casting.salary)
+   ));
+   var SEX = []
+   data.castings.map(brand => (
+      SEX.push(brand.listGender)
+   ));
+   var STYLE = []
+   data.castings.map(brand => (
+      STYLE.push(brand.listStyle)
+   ));
+   var REQUEST = []
+   data.castings.map(brand => (
+      REQUEST.push(brand.casting.request)
+   ));
    const users = [...Array(data.totalRow)].map((_, index) => {
       return {
          id: ID[index],
          avatarUrl: IMAGE[index],
          name: NAME[index],
          email: EMAIL[index],
-         phoneNumber: PHONE_NUMBER[index],
-         address: ADDRESS[index],
+         phoneNumber: DESCRIPTION[index],
+         // address: ADDRESS[index],
          state: OPENTIME[index],
-         country: 'Vietnam',
-         city: DESCRIPTION[index],
+         country: STYLE[index],
+         city: SEX[index],
          zipCode: CLOSETIME[index],
          company: GIFTED[index],
-         isVerified: true,
-         status: STATUS[index] ? ('active') : ('banned'),
+         isVerified: SALARY[index],
+         status: STATUS[index] ? ('active') : ('warning'),
          role: ADDRESS[index],
+         address: REQUEST[index],
       }
    })
    return [200, { users }];

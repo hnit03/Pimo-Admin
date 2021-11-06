@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik } from 'formik';
 import JSCookies from 'js-cookie';
 import axios from 'axios';
+import { makeStyles } from '@material-ui/styles';
 // material
 import { LoadingButton } from '@material-ui/lab';
 import {
@@ -195,6 +196,19 @@ export default function BrandNewForm({ isEdit, currentUser }) {
          })
    }, [])
 
+   const useStyles = makeStyles((theme) => ({
+      disabledInput: {
+         "& .MuiInputBase-root": {
+            editable: false,
+            disabled: true,
+            pointerEvents: 'none',
+            cursor: 'default'
+         }
+      }
+   }))
+
+   const classes = useStyles();
+
    return (
       <FormikProvider value={formik}>
          <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
@@ -241,7 +255,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('name')}
                               error={Boolean(touched.name && errors.name)}
                               helperText={touched.name && errors.name}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            />
                            <TextField
                               fullWidth
@@ -249,7 +263,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('email')}
                               error={Boolean(touched.email && errors.email)}
                               helperText={touched.email && errors.email}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            />
                         </Stack>
 
@@ -260,7 +274,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('phoneNumber')}
                               error={Boolean(touched.phoneNumber && errors.phoneNumber)}
                               helperText={touched.phoneNumber && errors.phoneNumber}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            />
                            <TextField
                               select
@@ -271,7 +285,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               SelectProps={{ native: true }}
                               error={Boolean(touched.country && errors.country)}
                               helperText={touched.country && errors.country}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            >
                               <option value="" />
                               {countries.map((option) => (
@@ -292,7 +306,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                                  SelectProps={{ native: true }}
                                  error={Boolean(touched.company && errors.company)}
                                  helperText={touched.company && errors.company}
-                                 disabled={isEdit}
+                                 className={classes.disabledInput}
                               >
                                  <option value="" />
                                  {
@@ -310,7 +324,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('role')}
                               error={Boolean(touched.role && errors.role)}
                               helperText={touched.role && errors.role}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            />
                         </Stack>
                         <TextField {
@@ -319,7 +333,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                            minRows={4}
                            maxRows={4}
                            label="Mô tả"
-                           disabled={isEdit} />
+                           className={classes.disabledInput}/>
                         {!isEdit ? (
                            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>

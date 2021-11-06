@@ -77,7 +77,7 @@ export default function AppCurrentDownload() {
 
   return (
     <Card>
-      <CardHeader title="Current Download" />
+      <CardHeader title="Lượng tải xuống hiện tại" />
       <ChartWrapperStyle dir="ltr">
         <ReactApexChart type="donut" series={CHART_DATA} options={chartOptions} height={280} />
       </ChartWrapperStyle>

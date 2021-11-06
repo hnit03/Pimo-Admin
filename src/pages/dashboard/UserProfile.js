@@ -42,8 +42,8 @@ const TABLE_HEAD = [
    { id: 'name', label: 'Tên', alignRight: false },
    { id: 'company', label: 'Lĩnh vực', alignRight: false },
    { id: 'role', label: 'Địa chỉ', alignRight: false },
-   { id: 'isVerified', label: 'Xác thực', alignRight: false },
-   { id: 'status', label: 'Hoạt động', alignRight: false },
+   // { id: 'isVerified', label: 'Xác thực', alignRight: false },
+   { id: 'status', label: 'Trạng thái', alignRight: false },
    { id: '' }
 ];
 
@@ -148,7 +148,7 @@ export default function UserList() {
    const isUserNotFound = filteredUsers.length === 0;
 
    return (
-      <Page title="User: List | Minimal-UI">
+      <Page title="Quản lý nhãn hàng">
          <Container maxWidth={themeStretch ? false : 'lg'}>
             <HeaderBreadcrumbs
                heading="Danh sách nhãn hàng"
@@ -157,16 +157,16 @@ export default function UserList() {
                   { name: 'Nhãn hàng', href: PATH_DASHBOARD.brand.root },
                   { name: 'Danh sách' }
                ]}
-               action={
-                  <Button
-                     variant="contained"
-                     component={RouterLink}
-                     to={PATH_DASHBOARD.brand.newBrand}
-                     startIcon={<Icon icon={plusFill} />}
-                  >
-                     Thêm nhãn hàng
-                  </Button>
-               }
+               // action={
+               //    <Button
+               //       variant="contained"
+               //       component={RouterLink}
+               //       to={PATH_DASHBOARD.brand.newBrand}
+               //       startIcon={<Icon icon={plusFill} />}
+               //    >
+               //       Thêm nhãn hàng
+               //    </Button>
+               // }
             />
 
             <Card>
@@ -209,8 +209,8 @@ export default function UserList() {
                                        </Stack>
                                     </TableCell>
                                     <TableCell align="left">{company}</TableCell>
-                                    <TableCell align="left">{role}</TableCell>
-                                    <TableCell align="left">{isVerified ? 'Đã xác thực' : 'Chưa xác thực'}</TableCell>
+                                    <TableCell style={{width: '20rem'}} align="left">{role}</TableCell>
+                                    {/* <TableCell align="left">{isVerified ? 'Đã xác thực' : 'Chưa xác thực'}</TableCell> */}
                                     <TableCell align="left">
                                        <Label
                                           variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}

@@ -16,9 +16,9 @@ import { CarouselControlsPaging1, CarouselControlsArrowsBasic1 } from '../../car
 // ----------------------------------------------------------------------
 
 const CAROUSELS = [
-  'Harry Potter and the Deathly Hallows - Part 2',
-  'Disney Zombies 2',
-  'Lightroom mobile - Koloro'
+  'Dior inaugurates a new flagship in China',
+  'Christian Dior: Designer of Dreams',
+  'SHOOTING FOR DIOR MAGAZINE COVER'
 ].map((item, index) => {
   const setIndex = index + 1;
 
@@ -80,7 +80,7 @@ function CarouselItem({ item, isActive }) {
                   display: 'block'
                 }}
               >
-                Featured App
+                Chiến dịch mới
               </Typography>
             </motion.div>
             <motion.div variants={varFadeInRight}>

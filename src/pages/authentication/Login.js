@@ -55,7 +55,7 @@ export default function Login() {
   };
 
   return (
-    <RootStyle title="Login | Minimal-UI">
+    <RootStyle title="Đăng nhập">
 
       <MHidden width="mdDown">
         <SectionStyle>

@@ -61,7 +61,7 @@ export default function AppWidgets1() {
       <Box sx={{ ml: 3, color: 'common.white' }}>
         <Typography variant="h4"> {fNumber(TOTAL)}</Typography>
         <Typography variant="body2" sx={{ opacity: 0.72 }}>
-          Conversion
+          Chuyển đổi
         </Typography>
       </Box>
       <IconStyle icon={personFill} />

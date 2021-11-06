@@ -95,7 +95,7 @@ function CountryItem({ country }) {
 export default function AppTopInstalledCountries() {
   return (
     <Card>
-      <CardHeader title="Top Installed Countries" />
+      <CardHeader title="Top quốc gia tải xuống" />
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3 }}>
           {INSTALLED.map((country) => (

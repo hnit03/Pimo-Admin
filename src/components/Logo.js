@@ -47,7 +47,7 @@ export default function Logo({ sx }) {
           />
         </g>
       </svg> */}
-      <img src='https://firebasestorage.googleapis.com/v0/b/pimo-fc268.appspot.com/o/icon1.png?alt=media&token=1e5feeba-a1fc-4a46-82af-282b6363f516' alt="Girl in a jacket" width="100%" height="100%" viewBox="0 0 512 512"/>
+      <img src='https://firebasestorage.googleapis.com/v0/b/pimo-fc268.appspot.com/o/images%2Ficon1.png?alt=media&token=bd0f566d-20e6-4ce8-b660-647e7307aa99' alt="Girl in a jacket" width="100%" height="100%" viewBox="0 0 512 512"/>
     </Box>
   );
 }

@@ -4,8 +4,10 @@ import React, { useCallback } from "react";
 import { useSnackbar } from "notistack5";
 import { useNavigate } from "react-router-dom";
 import { Form, FormikProvider, useFormik } from "formik";
+import { makeStyles } from '@material-ui/styles';
 // material
 import { LoadingButton } from "@material-ui/lab";
+import Chip from '@mui/material/Chip';
 import {
    Box,
    Card,
@@ -79,7 +81,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       email: Yup.string().required("Email là bắt buộc").email(),
       phoneNumber: Yup.string().required("Điện thoại là bắt buộc"),
       country: Yup.string().required("Quốc gia là bắt buộc"),
-      address: Yup.string().required("Địa điểm là bắt buộc"),
+      role: Yup.string().required("Địa điểm là bắt buộc"),
       company: Yup.string().required("Công ty là bắt buộc"),
       state: Yup.string().required("Tỉnh là bắt buộc"),
       city: Yup.string().required("Thành phố là bắt buộc"),
@@ -136,6 +138,11 @@ export default function UserNewForm({ isEdit, currentUser }) {
       getFieldProps,
    } = formik;
 
+   let request = "";
+   let count = 0;
+
+   values.address.split('<br/>').map((line) => (line !== '') ? (request += (line + "\n"), count ++) : null);
+
    const handleDrop = useCallback(
       (acceptedFiles) => {
          const file = acceptedFiles[0];
@@ -149,25 +156,25 @@ export default function UserNewForm({ isEdit, currentUser }) {
       [setFieldValue],
    );
 
+   const useStyles = makeStyles((theme) => ({
+      disabledInput: {
+         "& .MuiInputBase-root": {
+            editable: false,
+            disabled: true,
+            pointerEvents: 'none',
+            cursor: 'default'
+         }
+      }
+   }))
+
+   const classes = useStyles();
+
    return (
       <FormikProvider value={formik}>
          <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
             <Grid container spacing={3}>
                <Grid item xs={12} md={4}>
                   <Card sx={{ py: 10, px: 3 }}>
-                     {/* {isEdit && (
-                        <Label
-                           color={values.status !== "active" ? "error" : "success"}
-                           sx={{
-                              textTransform: "uppercase",
-                              position: "absolute",
-                              top: 24,
-                              right: 24,
-                           }}
-                        >
-                           {values.status === "banned" ? "Ngừng hoạt động" : "Hoạt động"}
-                        </Label>
-                     )} */}
 
                      <Box sx={{ mb: 5 }}>
                         <UploadAvatar
@@ -176,6 +183,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                            maxSize={3145728}
                            onDrop={handleDrop}
                            error={Boolean(touched.avatarUrl && errors.avatarUrl)}
+                           disabled={true}
                            caption={
                               <Typography
                                  variant="caption"
@@ -197,41 +205,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
                         </FormHelperText>
                      </Box>
 
-                     {/* {isEdit && (
-                        <FormControlLabel
-                           labelPlacement="start"
-                           control={
-                              <Switch
-                                 onChange={(event) =>
-                                    setFieldValue(
-                                       "status",
-                                       event.target.checked ? "banned" : "active",
-                                    )
-                                 }
-                                 checked={values.status !== "active"}
-                              />
-                           }
-                           label={
-                              <>
-                                 <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                                    Banned
-                                 </Typography>
-                                 <Typography
-                                    variant="body2"
-                                    sx={{ color: "text.secondary" }}
-                                 >
-                                    Cấm người mẫu
-                                 </Typography>
-                              </>
-                           }
-                           sx={{
-                              mx: 0,
-                              mb: 3,
-                              width: 1,
-                              justifyContent: "space-between",
-                           }}
-                        />
-                     )} */}
                   </Card>
                </Grid>
 
@@ -248,55 +221,36 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               {...getFieldProps("name")}
                               error={Boolean(touched.name && errors.name)}
                               helperText={touched.name && errors.name}
+                              className={classes.disabledInput}
                            />
-                           {/* <TextField
-                    fullWidth
-                    label="Địa chỉ email"
-                    {...getFieldProps('email')}
-                    error={Boolean(touched.email && errors.email)}
-                    helperText={touched.email && errors.email}
-                  /> */}
                            <TextField
-                              select
                               fullWidth
                               label="Địa điểm"
                               placeholder="address"
-                              {...getFieldProps("address")}
+                              {...getFieldProps("role")}
                               SelectProps={{ native: true }}
-                              error={Boolean(touched.address && errors.address)}
-                              helperText={touched.address && errors.address}
-                           >
-                              <option value="" />
-                              {countries.map((option) => (
-                                 <option key={option.code} value={option.label}>
-                                    {option.label}
-                                 </option>
-                              ))}
-                           </TextField>
+                              error={Boolean(touched.role && errors.role)}
+                              helperText={touched.role && errors.role}
+                              className={classes.disabledInput}
+                           />
                         </Stack>
 
                         <Stack
                            direction={{ xs: "column", sm: "row" }}
                            spacing={{ xs: 3, sm: 2 }}
                         >
-                           {/* <TextField
-                    fullWidth
-                    label="Số điện thoại"
-                    {...getFieldProps('phoneNumber')}
-                    error={Boolean(touched.phoneNumber && errors.phoneNumber)}
-                    helperText={touched.phoneNumber && errors.phoneNumber}
-                  /> */}
                            <LocalizationProvider dateAdapter={AdapterDateFns}>
                               <DateTimePicker
+                                 inputFormat="dd/MM/yyyy hh:mm a"
                                  renderInput={(props) => (
                                     <TextField
                                        fullWidth
                                        {...props}
-                                       helperText="thời gian bắt đầu lớn hơn kết thúc"
+                                       className={classes.disabledInput}
                                     />
                                  )}
                                  label="thời gian bắt đầu"
-                                 value={value}
+                                 value={new Date(values.state)}
                                  onChange={(newValue) => {
                                     setValue(newValue);
                                  }}
@@ -304,33 +258,18 @@ export default function UserNewForm({ isEdit, currentUser }) {
                            </LocalizationProvider>
                            <LocalizationProvider dateAdapter={AdapterDateFns}>
                               <DateTimePicker
+                                 inputFormat="dd/MM/yyyy hh:mm a"
                                  renderInput={(props) => (
-                                    <TextField fullWidth {...props} />
+                                    <TextField fullWidth {...props}
+                                       className={classes.disabledInput} />
                                  )}
                                  label="thời gian kết thúc"
-                                 value={value}
+                                 value={new Date(values.zipCode)}
                                  onChange={(newValue) => {
                                     setValue(newValue);
                                  }}
                               />
                            </LocalizationProvider>
-                           {/* <TextField
-                    select
-                    fullWidth
-                    label="Quốc gia"
-                    placeholder="Country"
-                    {...getFieldProps('country')}
-                    SelectProps={{ native: true }}
-                    error={Boolean(touched.country && errors.country)}
-                    helperText={touched.country && errors.country}
-                  >
-                    <option value="" />
-                    {countries.map((option) => (
-                      <option key={option.code} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </TextField> */}
                         </Stack>
 
                         <Stack
@@ -338,55 +277,21 @@ export default function UserNewForm({ isEdit, currentUser }) {
                            spacing={{ xs: 3, sm: 2 }}
                         >
                            <p>Mức lương</p>
-                           <p style={{ marginLeft: "17.5rem" }}>Chiều cao</p>
                         </Stack>
 
                         <Stack
                            direction={{ xs: "column", sm: "row" }}
                            spacing={{ xs: 3, sm: 2 }}
+                           style={{ justifyContent: "center" }}
                         >
-                           {/* <TextField
-                    fullWidth
-                    label="Tỉnh"
-                    {...getFieldProps("state")}
-                    error={Boolean(touched.state && errors.state)}
-                    helperText={touched.state && errors.state}
-                  /> */}
                            <Slider
+                              style={{ width: "95%" }}
                               aria-label="Temperature"
-                              defaultValue={30}
-                              getAriaValueText={valuetext}
+                              defaultValue={values.isVerified}
                               color="secondary"
-                              valueLabelDisplay="auto"
-                              sx={{
-                                 '& .MuiSlider-track': {
-                                    color: '#00AB55'
-                                 },
-                                 '& .MuiSlider-thumb': {
-                                    backgroundColor: '#00AB55',
-                                 },
-                                 '& .MuiSlider-rail': {
-                                    opacity: 0.5,
-                                    backgroundColor: '#bfbfbf',
-                                 },
-                              }}
-                           />
-                           {/* <TextField
-                    fullWidth
-                    label="Thành phố"
-                    {...getFieldProps("city")}
-                    error={Boolean(touched.city && errors.city)}
-                    helperText={touched.city && errors.city}
-                  /> */}
-                           <Slider
-                              getAriaLabel={() => "Temperature range"}
-                              value={valueHeight}
-                              onChange={handleChangeHeight}
-                              valueLabelDisplay="auto"
-                              min={160}
-                              step={1}
-                              max={250}
-                              // getAriaValueText={valuetext}
+                              disabled={true}
+                              valueLabelDisplay="on"
+                              max={10000}
                               sx={{
                                  '& .MuiSlider-track': {
                                     color: '#00AB55'
@@ -401,310 +306,50 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               }}
                            />
                         </Stack>
-
+                        <br />
+                        Giới tính
                         <Stack
                            direction={{ xs: "column", sm: "row" }}
                            spacing={{ xs: 3, sm: 2 }}
                         >
-                           <p>Tuổi</p>
+                           {(values.city) ? (
+                              values.city.map((item, index) => {
+                                 return (
 
-                           <p style={{ marginLeft: "21rem" }}>Vòng 1</p>
-                        </Stack>
-
-                        <Stack
-                           direction={{ xs: "column", sm: "row" }}
-                           spacing={{ xs: 3, sm: 2 }}
-                        >
-                           {/* <TextField
-                    fullWidth
-                    label="Quận/Huyện"
-                    {...getFieldProps("address")}
-                    error={Boolean(touched.address && errors.address)}
-                    helperText={touched.address && errors.address}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Mã vùng"
-                    {...getFieldProps("zipCode")}
-                  /> */}
-                           <Slider
-                              getAriaLabel={() => "Temperature range"}
-                              value={valueAge}
-                              onChange={handleChangeAge}
-                              valueLabelDisplay="auto"
-                              // getAriaValueText={valuetext}
-                              sx={{
-                                 '& .MuiSlider-track': {
-                                    color: '#00AB55'
-                                 },
-                                 '& .MuiSlider-thumb': {
-                                    backgroundColor: '#00AB55',
-                                 },
-                                 '& .MuiSlider-rail': {
-                                    opacity: 0.5,
-                                    backgroundColor: '#bfbfbf',
-                                 },
-                              }}
-                           />
-                           <Slider
-                              getAriaLabel={() => "Temperature range"}
-                              value={measure1}
-                              onChange={handleChangeMeaSure1}
-                              valueLabelDisplay="auto"
-                              // getAriaValueText={valuetext}
-                              sx={{
-                                 '& .MuiSlider-track': {
-                                    color: '#00AB55'
-                                 },
-                                 '& .MuiSlider-thumb': {
-                                    backgroundColor: '#00AB55',
-                                 },
-                                 '& .MuiSlider-rail': {
-                                    opacity: 0.5,
-                                    backgroundColor: '#bfbfbf',
-                                 },
-                              }}
-                           />
-                        </Stack>
-
-                        <Stack
-                           direction={{ xs: "column", sm: "row" }}
-                           spacing={{ xs: 3, sm: 2 }}
-                        >
-                           <p>Vòng 2</p>
-                           <p style={{ marginLeft: "20rem" }}>Vòng 3</p>
-                        </Stack>
-
-                        <Stack
-                           direction={{ xs: "column", sm: "row" }}
-                           spacing={{ xs: 3, sm: 2 }}
-                        >
-                           {/* <TextField
-                    fullWidth
-                    label="Quận/Huyện"
-                    {...getFieldProps("address")}
-                    error={Boolean(touched.address && errors.address)}
-                    helperText={touched.address && errors.address}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Mã vùng"
-                    {...getFieldProps("zipCode")}
-                  /> */}
-                           <Slider
-                              getAriaLabel={() => "Temperature range"}
-                              value={measure2}
-                              onChange={handleChangeMeaSure2}
-                              valueLabelDisplay="auto"
-                              // getAriaValueText={valuetext}
-                              sx={{
-                                 '& .MuiSlider-track': {
-                                    color: '#00AB55'
-                                 },
-                                 '& .MuiSlider-thumb': {
-                                    backgroundColor: '#00AB55',
-                                 },
-                                 '& .MuiSlider-rail': {
-                                    opacity: 0.5,
-                                    backgroundColor: '#bfbfbf',
-                                 },
-                              }}
-                           />
-                           <Slider
-                              getAriaLabel={() => "Temperature range"}
-                              value={measure3}
-                              onChange={handleChangeMeaSure3}
-                              valueLabelDisplay="auto"
-                              // getAriaValueText={valuetext}
-                              sx={{
-                                 '& .MuiSlider-track': {
-                                    color: '#00AB55'
-                                 },
-                                 '& .MuiSlider-thumb': {
-                                    backgroundColor: '#00AB55',
-                                 },
-                                 '& .MuiSlider-rail': {
-                                    opacity: 0.5,
-                                    backgroundColor: '#bfbfbf',
-                                 },
-                              }}
-                           />
-                        </Stack>
-
-
-                        <Stack
-                           direction={{ xs: "column", sm: "row" }}
-                           spacing={{ xs: 3, sm: 2 }}
-                        >
-                           {/* <TextField
-                    fullWidth
-                    label="Quận/Huyện"
-                    {...getFieldProps("address")}
-                    error={Boolean(touched.address && errors.address)}
-                    helperText={touched.address && errors.address}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Mã vùng"
-                    {...getFieldProps("zipCode")}
-                  /> */}
-                           <Autocomplete
-                              multiple
-                              id="checkboxes-tags-demo"
-                              options={hairColor}
-                              disableCloseOnSelect
-                              getOptionLabel={(option) => option.title}
-                              renderOption={(props, option, { selected }) => (
-                                 <li {...props}>
-                                    <Checkbox
-                                       icon={icon}
-                                       checkedIcon={checkedIcon}
-                                       style={{ marginRight: 8 }}
-                                       checked={selected}
-
+                                    <Chip
+                                       label={item.genderName}
+                                       // onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+                                       style={{ width: '15%', backgroundColor: '#00AB55', color: 'white' }}
                                     />
-                                    {option.title}
-                                 </li>
-                              )}
-                              style={{ width: 500 }}
-                              renderInput={(params) => (
-                                 <TextField
-                                    {...params}
-                                    {...getFieldProps('hairColor')}
-                                    error={Boolean(touched.hairColor && errors.hairColor)}
-                                    helperText={touched.hairColor && errors.hairColor}
-                                    label="Màu tóc"
-                                    placeholder="Favorites"
-                                 />
-                              )}
-                           />
-                           <Autocomplete
-                              multiple
-                              id="checkboxes-tags-demo"
-                              options={hairColor}
-                              disableCloseOnSelect
-                              getOptionLabel={(option) => option.title}
-                              renderOption={(props, option, { selected }) => (
-                                 <li {...props}>
-                                    <Checkbox
-                                       icon={icon}
-                                       checkedIcon={checkedIcon}
-                                       style={{ marginRight: 8 }}
-                                       checked={selected}
-                                    />
-                                    {option.title}
-                                 </li>
-                              )}
-                              style={{ width: 500 }}
-                              renderInput={(params) => (
-                                 <TextField
-                                    {...params}
-                                    {...getFieldProps('skinColor')}
-                                    error={Boolean(touched.skinColor && errors.skinColor)}
-                                    helperText={touched.skinColor && errors.skinColor}
-                                    label="Màu da"
-                                    placeholder="Favorites"
-                                 />
-                              )}
-                           />
+                                 )
+                              })
+                           ) : (console.log('null'))}
                         </Stack>
-
-
+                        <br />
+                        Phong cách
                         <Stack
                            direction={{ xs: "column", sm: "row" }}
                            spacing={{ xs: 3, sm: 2 }}
                         >
-                           {/* <TextField
-                    fullWidth
-                    label="Quận/Huyện"
-                    {...getFieldProps("address")}
-                    error={Boolean(touched.address && errors.address)}
-                    helperText={touched.address && errors.address}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Mã vùng"
-                    {...getFieldProps("zipCode")}
-                  /> */}
-                           <Autocomplete
-                              multiple
-                              id="checkboxes-tags-demo"
-                              options={hairColor}
-                              disableCloseOnSelect
-                              getOptionLabel={(option) => option.title}
-                              renderOption={(props, option, { selected }) => (
-                                 <li {...props}>
-                                    <Checkbox
-                                       icon={icon}
-                                       checkedIcon={checkedIcon}
-                                       style={{ marginRight: 8 }}
-                                       checked={selected}
+                           {(values.country) ? (
+                              values.country.map((item, index) => {
+                                 return (
+
+                                    <Chip
+                                       label={item.name}
+                                       // onDelete={data.label === 'React' ? undefined : handleDelete(data)}
+                                       style={{ width: '15%', backgroundColor: '#00AB55', color: 'white' }}
                                     />
-                                    {option.title}
-                                 </li>
-                              )}
-                              style={{ width: 500 }}
-                              renderInput={(params) => (
-                                 <TextField
-                                    {...params}
-                                    {...getFieldProps('style')}
-                                    error={Boolean(touched.style && errors.style)}
-                                    helperText={touched.style && errors.style}
-                                    label="Phong cách"
-                                    placeholder="Favorites"
-                                 />
-                              )}
-                           />
-                           <Autocomplete
-                              multiple
-                              id="checkboxes-tags-demo"
-                              options={hairColor}
-                              disableCloseOnSelect
-                              getOptionLabel={(option) => option.title}
-                              renderOption={(props, option, { selected }) => (
-                                 <li {...props}>
-                                    <Checkbox
-                                       icon={icon}
-                                       checkedIcon={checkedIcon}
-                                       style={{ marginRight: 8 }}
-                                       checked={selected}
-                                    />
-                                    {option.title}
-                                 </li>
-                              )}
-                              style={{ width: 500 }}
-                              renderInput={(params) => (
-                                 <TextField
-                                    {...params}
-                                    {...getFieldProps('sex')}
-                                    error={Boolean(touched.sex && errors.sex)}
-                                    helperText={touched.sex && errors.sex}
-                                    label="Giới tính"
-                                    placeholder="Favorites"
-                                 />
-                              )}
-                           />
+                                 )
+                              })
+                           ) : (console.log('null'))}
                         </Stack>
-                        <TextField {...getFieldProps('description')} fullWidth multiline minRows={4} maxRows={4} label="Mô tả" />
-                        {/* <Stack
-                  direction={{ xs: "column", sm: "row" }}
-                  spacing={{ xs: 3, sm: 2 }}
-                >
-                  <TextField
-                    fullWidth
-                    label="Tài năng"
-                    {...getFieldProps("company")}
-                    error={Boolean(touched.company && errors.company)}
-                    helperText={touched.company && errors.company}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Địa chỉ"
-                    {...getFieldProps("role")}
-                    error={Boolean(touched.role && errors.role)}
-                    helperText={touched.role && errors.role}
-                  />
-                </Stack> */}
+                        <TextField {...getFieldProps('phoneNumber')} fullWidth multiline minRows={4} maxRows={4} label="Mô tả"
+                           className={classes.disabledInput} />
+                        <TextField {...getFieldProps('address')} fullWidth multiline minRows={count + 1} maxRows={count + 1} label="Yêu cầu"
+                           
+                           value={request}
+                           className={classes.disabledInput} />
 
                         {!isEdit ? (
                            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>

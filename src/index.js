@@ -55,28 +55,33 @@ import { AuthProvider } from './contexts/JWTContext';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 // ----------------------------------------------------------------------
 
 ReactDOM.render(
-  <HelmetProvider>
-    <ReduxProvider store={store}>
-      <PersistGate loading={<LoadingScreen />} persistor={persistor}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <SettingsProvider>
-            <CollapseDrawerProvider>
-              <BrowserRouter>
-                <AuthProvider>
-                  <App />
-                </AuthProvider>
-              </BrowserRouter>
-            </CollapseDrawerProvider>
-          </SettingsProvider>
-        </LocalizationProvider>
-      </PersistGate>
-    </ReduxProvider>
-  </HelmetProvider>,
-  document.getElementById('root')
+   <HelmetProvider>
+      <ReduxProvider store={store}>
+         <PersistGate loading={<LoadingScreen />} persistor={persistor}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+               <SettingsProvider>
+                  <CollapseDrawerProvider>
+                     <BrowserRouter>
+                        <AuthProvider>
+                           <MessengerCustomerChat
+                              pageId="108999594921598"
+                              appId="377383184072138"
+                           />,
+                           <App />
+                        </AuthProvider>
+                     </BrowserRouter>
+                  </CollapseDrawerProvider>
+               </SettingsProvider>
+            </LocalizationProvider>
+         </PersistGate>
+      </ReduxProvider>
+   </HelmetProvider>,
+   document.getElementById('root')
 );
 
 // If you want to enable client cache, register instead.

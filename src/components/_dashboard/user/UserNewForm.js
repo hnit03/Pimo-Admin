@@ -7,6 +7,7 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import axios from 'axios';
 import DateTime from "./DateTimePicker";
 import JSCookies from 'js-cookie';
+import { makeStyles } from '@material-ui/styles';
 // material
 import { LoadingButton } from '@material-ui/lab';
 import {
@@ -171,6 +172,20 @@ export default function UserNewForm({ isEdit, currentUser }) {
          value: 'Khác'
       }
    ]
+   const useStyles = makeStyles((theme) => ({
+      disabledInput: {
+         "& .MuiInputBase-root": {
+         editable: !isEdit,
+         disabled: isEdit,
+         pointerEvents: isEdit? 'none': 'auto',
+         cursor: 'default'
+         }
+       }
+   }))
+
+   const classes = useStyles();
+
+   console.log(values.city);
 
    return (
       <FormikProvider value={formik}>
@@ -228,7 +243,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('name')}
                               error={Boolean(touched.name && errors.name)}
                               helperText={touched.name && errors.name}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            />
                            <TextField
                               fullWidth
@@ -236,18 +251,19 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('email')}
                               error={Boolean(touched.email && errors.email)}
                               helperText={touched.email && errors.email}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            />
                         </Stack>
 
                         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                            <TextField
                               fullWidth
+                              type="number"
                               label="Số điện thoại"
                               {...getFieldProps('phoneNumber')}
                               error={Boolean(touched.phoneNumber && errors.phoneNumber)}
                               helperText={touched.phoneNumber && errors.phoneNumber}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            />
                            <TextField
                               select
@@ -258,7 +274,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               SelectProps={{ native: true }}
                               error={Boolean(touched.country && errors.country)}
                               helperText={touched.country && errors.country}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            >
                               <option value="" />
                               {countries.map((option) => (
@@ -276,7 +292,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('address')}
                               error={Boolean(touched.address && errors.address)}
                               helperText={touched.address && errors.address}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            />
                            <TextField
                               select
@@ -287,7 +303,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               SelectProps={{ native: true }}
                               error={Boolean(touched.city && errors.city)}
                               helperText={touched.city && errors.city}
-                              disabled={isEdit}
+                              className={classes.disabledInput}
                            >
                               <option value="" />
                               {
@@ -302,16 +318,18 @@ export default function UserNewForm({ isEdit, currentUser }) {
                         {isEdit && (
                            <>
                               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                                 <DateTime
-                                    {...getFieldProps('state')}
+                                 <TextField
+                                    // {...getFieldProps('state')}
+                                    value={(new Date(values.state)).toLocaleDateString('vi-vn')}
+                                    fullWidth 
                                     label='Ngày sinh'
                                     error={Boolean(touched.state && errors.state)}
                                     helperText={touched.state && errors.state}
                                     setValue={setFieldValue}
-                                    disabled={isEdit}
+                                    className={classes.disabledInput}
                                  />
                                  <TextField fullWidth label="Mã vùng" {...getFieldProps('zipCode')}
-                                    disabled={isEdit} />
+                                    className={classes.disabledInput} />
                               </Stack>
 
                               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
@@ -321,7 +339,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                                     {...getFieldProps('company')}
                                     error={Boolean(touched.company && errors.company)}
                                     helperText={touched.company && errors.company}
-                                    disabled={isEdit}
+                                    className={classes.disabledInput}
                                  />
                                  <TextField
                                     fullWidth
@@ -329,7 +347,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                                     {...getFieldProps('role')}
                                     error={Boolean(touched.role && errors.role)}
                                     helperText={touched.role && errors.role}
-                                    disabled={isEdit}
+                                    className={classes.disabledInput}
                                  />
                               </Stack>
                            </>
