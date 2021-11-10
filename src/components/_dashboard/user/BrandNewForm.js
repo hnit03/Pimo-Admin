@@ -311,7 +311,7 @@ export default function BrandNewForm({ isEdit, currentUser }) {
                                  <option value="" />
                                  {
                                     listCategory.map((option) => (
-                                       <option key={option.id} value={option.id}>
+                                       <option key={option.id} value={option.name}>
                                           {option.name}
                                        </option>
                                     ))

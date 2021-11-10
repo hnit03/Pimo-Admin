@@ -34,7 +34,7 @@ export default function BrandCreate() {
     <Page title="User: Create a new user | Minimal-UI">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Tạo mới nhãn hàng' : 'Xem thông tin nhẫn hàng'}
+          heading={!isEdit ? 'Tạo mới nhãn hàng' : 'Xem thông tin nhãn hàng'}
           links={[
             { name: 'Trang chủ', href: PATH_DASHBOARD.root },
             { name: 'Nhãn hàng', href: PATH_DASHBOARD.brand.root },
