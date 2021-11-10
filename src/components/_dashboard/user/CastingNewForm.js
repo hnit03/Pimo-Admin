@@ -291,7 +291,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               color="secondary"
                               disabled={true}
                               valueLabelDisplay="on"
-                              max={10000}
+                              max={100000000}
                               sx={{
                                  '& .MuiSlider-track': {
                                     color: '#00AB55'
