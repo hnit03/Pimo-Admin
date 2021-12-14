@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import faker from 'faker';
 // utils
 import fakeRequest from '../utils/fakeRequest';
@@ -7,7 +6,6 @@ import { auth, provider } from '../adapter/firebase';
 //
 import mock from './mock';
 import axios from 'axios';
-
 // ----------------------------------------------------------------------
 
 const JWT_SECRET = 'minimal-secret-key';
@@ -67,7 +65,6 @@ mock.onPost('/api/account/login').reply(async () => {
       const current_user = authData[0].user
       return [200, { accessToken, current_user }];
    } catch (error) {
-      console.error(error);
       return [500, { message: 'Internal server error' }];
    }
 });

@@ -1,8 +1,7 @@
-import { createContext, useEffect, useReducer } from 'react';
+import React, { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 // utils
 import axios from '../utils/axios';
-import { isValidToken, setSession } from '../utils/jwt';
 import Cookies from 'universal-cookie';
 import JSCookies from 'js-cookie';
 import jwt from 'jwt-decode';
@@ -110,7 +109,6 @@ function AuthProvider({ children }) {
             });
          }
       };
-
       initialize();
    }, []);
 
@@ -118,6 +116,9 @@ function AuthProvider({ children }) {
       const cookies = new Cookies();
       const response = await axios.post('/api/account/login');
       const { accessToken, current_user } = response.data;
+      if(accessToken === undefined) {
+         return [200, { message: true }];
+      }
       if (jwt(accessToken)[Object.keys(jwt(accessToken))[3]] === "Admin") {
          cookies.set('jwt', accessToken, { path: '/', maxAge: 60 * 60 * 1000 });
          cookies.set('user', current_user, { path: '/', maxAge: 60 * 60 * 1000 });
@@ -138,6 +139,8 @@ function AuthProvider({ children }) {
                user
             }
          });
+      } else {
+         return [200, { message: true }];
       }
    };
 
@@ -160,13 +163,40 @@ function AuthProvider({ children }) {
    };
 
    const logout = async () => {
+      // setSession(null);
       JSCookies.remove('jwt')
       dispatch({ type: 'LOGOUT' });
    };
 
    const resetPassword = () => { };
 
-   const updateProfile = () => { };
+   const updateProfile = () => {
+      const accessToken = JSCookies.get('jwt')
+      const url = `https://api.pimo.studio/api/v1/brands/profile/${jwt(accessToken)[Object.keys(jwt(accessToken))[4]]}`
+      fetch(url)
+         .then(res => res.json())
+         .then(data => {
+            const user = {
+               about: data.brand.description,
+               address: data.brand.address,
+               displayName: data.brand.name,
+               email: data.brand.mail,
+               id: data.brand.id,
+               isPublic: true,
+               phoneNumber: data.brand.phone,
+               photoURL: data.brand.logo,
+               role: 'Nhãn hàng',
+               brandCateId: data.brand.brandCateId
+            }
+            dispatch({
+               type: 'LOGIN',
+               payload: {
+                  user
+               }
+            });
+         }
+         )
+   }
 
    return (
       <AuthContext.Provider
@@ -180,9 +210,12 @@ function AuthProvider({ children }) {
             updateProfile
          }}
       >
+
          {children}
       </AuthContext.Provider>
    );
 }
+
+
 
 export { AuthContext, AuthProvider };
