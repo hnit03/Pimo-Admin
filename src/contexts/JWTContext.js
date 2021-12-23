@@ -116,7 +116,7 @@ function AuthProvider({ children }) {
       const cookies = new Cookies();
       const response = await axios.post('/api/account/login');
       const { accessToken, current_user } = response.data;
-      if(accessToken === undefined) {
+      if (accessToken === undefined) {
          return [200, { message: true }];
       }
       if (jwt(accessToken)[Object.keys(jwt(accessToken))[3]] === "Admin") {
@@ -144,59 +144,10 @@ function AuthProvider({ children }) {
       }
    };
 
-   const register = async (email, password, firstName, lastName) => {
-      const response = await axios.post('/api/account/register', {
-         email,
-         password,
-         firstName,
-         lastName
-      });
-      const { accessToken, user } = response.data;
-
-      window.localStorage.setItem('accessToken', accessToken);
-      dispatch({
-         type: 'REGISTER',
-         payload: {
-            user
-         }
-      });
-   };
-
    const logout = async () => {
-      // setSession(null);
       JSCookies.remove('jwt')
       dispatch({ type: 'LOGOUT' });
    };
-
-   const resetPassword = () => { };
-
-   const updateProfile = () => {
-      const accessToken = JSCookies.get('jwt')
-      const url = `https://api.pimo.studio/api/v1/brands/profile/${jwt(accessToken)[Object.keys(jwt(accessToken))[4]]}`
-      fetch(url)
-         .then(res => res.json())
-         .then(data => {
-            const user = {
-               about: data.brand.description,
-               address: data.brand.address,
-               displayName: data.brand.name,
-               email: data.brand.mail,
-               id: data.brand.id,
-               isPublic: true,
-               phoneNumber: data.brand.phone,
-               photoURL: data.brand.logo,
-               role: 'Nhãn hàng',
-               brandCateId: data.brand.brandCateId
-            }
-            dispatch({
-               type: 'LOGIN',
-               payload: {
-                  user
-               }
-            });
-         }
-         )
-   }
 
    return (
       <AuthContext.Provider
@@ -205,17 +156,11 @@ function AuthProvider({ children }) {
             method: 'jwt',
             login,
             logout,
-            register,
-            resetPassword,
-            updateProfile
          }}
       >
-
          {children}
       </AuthContext.Provider>
    );
 }
-
-
 
 export { AuthContext, AuthProvider };

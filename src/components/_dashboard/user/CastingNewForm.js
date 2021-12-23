@@ -13,11 +13,9 @@ import {
    Card,
    Grid,
    Stack,
-   Switch,
    TextField,
    Typography,
    FormHelperText,
-   FormControlLabel,
 } from "@material-ui/core";
 // utils
 import { fData } from "../../../utils/formatNumber";
@@ -25,17 +23,11 @@ import fakeRequest from "../../../utils/fakeRequest";
 // routes
 import { PATH_DASHBOARD } from "../../../routes/paths";
 //
-import Label from "../../Label";
 import { UploadAvatar } from "../../upload";
-import countries, { hairColor } from "./countries";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import Slider from "@mui/material/Slider";
-import Autocomplete from '@mui/material/Autocomplete';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import Checkbox from '@mui/material/Checkbox';
 
 
 // ----------------------------------------------------------------------
@@ -44,38 +36,13 @@ UserNewForm.propTypes = {
    isEdit: PropTypes.bool,
    currentUser: PropTypes.object,
 };
-const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-const checkedIcon = <CheckBoxIcon fontSize="small" />;
+// const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+// const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 export default function UserNewForm({ isEdit, currentUser }) {
    const navigate = useNavigate();
-   const [value, setValue] = React.useState(new Date());
    const { enqueueSnackbar } = useSnackbar();
-   const [valueHeight, setValueHeight] = React.useState([160, 250]);
-   const [valueAge, setValueAge] = React.useState([18, 100]);
-   const [measure1, setMeaSure1] = React.useState([20, 47]);
-   const [measure2, setMeaSure2] = React.useState([20, 45]);
-   const [measure3, setMeaSure3] = React.useState([31, 50]);
 
-   const handleChangeHeight = (event, newValue) => {
-      setValueHeight(newValue);
-   };
-   const handleChangeAge = (event, newValue) => {
-      setValueAge(newValue);
-   };
-   const handleChangeMeaSure1 = (event, newValue) => {
-      setMeaSure1(newValue);
-   };
-   const handleChangeMeaSure2 = (event, newValue) => {
-      setMeaSure2(newValue);
-   };
-   const handleChangeMeaSure3 = (event, newValue) => {
-      setMeaSure3(newValue);
-   };
-
-   function valuetext(value) {
-      return `${value}°C`;
-   }
    const NewUserSchema = Yup.object().shape({
       name: Yup.string().required("Tên là bắt buộc"),
       email: Yup.string().required("Email là bắt buộc").email(),
@@ -251,9 +218,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
                                  )}
                                  label="thời gian bắt đầu"
                                  value={new Date(values.state)}
-                                 onChange={(newValue) => {
-                                    setValue(newValue);
-                                 }}
                               />
                            </LocalizationProvider>
                            <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -265,9 +229,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
                                  )}
                                  label="thời gian kết thúc"
                                  value={new Date(values.zipCode)}
-                                 onChange={(newValue) => {
-                                    setValue(newValue);
-                                 }}
                               />
                            </LocalizationProvider>
                         </Stack>

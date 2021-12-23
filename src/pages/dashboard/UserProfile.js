@@ -157,16 +157,6 @@ export default function UserList() {
                   { name: 'Nhãn hàng', href: PATH_DASHBOARD.brand.root },
                   { name: 'Danh sách' }
                ]}
-               // action={
-               //    <Button
-               //       variant="contained"
-               //       component={RouterLink}
-               //       to={PATH_DASHBOARD.brand.newBrand}
-               //       startIcon={<Icon icon={plusFill} />}
-               //    >
-               //       Thêm nhãn hàng
-               //    </Button>
-               // }
             />
 
             <Card>

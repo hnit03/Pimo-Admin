@@ -5,6 +5,8 @@ import axios from '../../utils/axios';
 import JSCookies from 'js-cookie';
 import this_axios from 'axios';
 
+require('dotenv').config()
+
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -67,7 +69,7 @@ const slice = createSlice({
             }
          };
          try {
-            this_axios.delete(`https://api.pimo.studio/api/v1/models?id=${action.payload}`, axiosConfig);
+            this_axios.delete(`${process.env.REACT_APP_API_URL}/models?id=${action.payload}`, axiosConfig);
          } catch (error) {
             console.log(error);
          }
@@ -91,7 +93,7 @@ const slice = createSlice({
             }
          };
          try {
-            this_axios.delete(`https://api.pimo.studio/api/v1/brands/${action.payload}`, axiosConfig);
+            this_axios.delete(`${process.env.REACT_APP_API_URL}/brands/${action.payload}`, axiosConfig);
          } catch (error) {
             console.log(error);
          }
@@ -115,7 +117,7 @@ const slice = createSlice({
             }
          };
          try {
-            this_axios.delete(`https://api.pimo.studio/api/v1/castings/${action.payload}`, axiosConfig);
+            this_axios.delete(`${process.env.REACT_APP_API_URL}/castings/${action.payload}`, axiosConfig);
          } catch (error) {
             console.log(error);
          }
@@ -141,7 +143,7 @@ const slice = createSlice({
             }
          };
          try {
-            this_axios.put(`https://api.pimo.studio/api/v1/castings/admin`, action.payload, axiosConfig);
+            this_axios.put(`${process.env.REACT_APP_API_URL}/castings/admin`, action.payload, axiosConfig);
          } catch (error) {
             console.log(error);
          }
