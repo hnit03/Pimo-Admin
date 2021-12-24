@@ -161,7 +161,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
             formData.append('District', values.role + ', ' + values.city)
             formData.append('GenderId', values.sex)
             formData.append('Gifted', values.company)
-            formData.append('DateOfBirth', values.DOB)
+            formData.append('DateOfBirth', (new Date(values.DOB)).toISOString())
             formData.append('Salary', values.salary)
             formData.append('description', values.description)
             formData.append('height', values.height)
@@ -209,17 +209,16 @@ export default function UserNewForm({ isEdit, currentUser }) {
             //       'authorization': 'Bearer ' + accessToken
             //    }
             // };
-            result = (await axios.post('https://api.pimo.studio/api/v1/models', formData, axiosConfig)).data.success;
-            // console.log(formData.get('avatar'));
-            // console.log(formData.get('name'));
-            // console.log(formData.get('email'));
-            // console.log(formData.get('phoneNumber'));
-            // console.log(formData.get('country'));
-            // console.log(formData.get('state'));
-            // console.log(formData.get('city'));
-            // console.log(formData.get('sex'));
-            // console.log(formData.get('gift'));
-            // console.log(formData.get('dateOfBirth'));
+            console.log(formData.get('imageAvatar'));
+            console.log(formData.get('Name'));
+            console.log(formData.get('Mail'));
+            console.log(formData.get('Phone'));
+            console.log(formData.get('Country'));
+            console.log(formData.get('Province'));
+            console.log(formData.get('District'));
+            console.log(formData.get('GenderId'));
+            console.log(formData.get('Gifted'));
+            console.log(formData.get('DateOfBirth'));
             // console.log(formData.get('description'));
             // console.log(formData.get('height'));
             // console.log(formData.get('weight'));
@@ -231,8 +230,12 @@ export default function UserNewForm({ isEdit, currentUser }) {
             // console.log(formData.get('eyeColor'));
             // console.log(formData.get('style'));
             // console.log(formData.get('voice'));
-            // console.log(formData.get('salary'));
+            console.log(formData.get('Salary'));
+            console.log(formData.get('Facebook'));
+            console.log(formData.get('Instagram'));
+            console.log(formData.get('Twitter'));
             // await fakeRequest(500);
+            result = (await axios.post('https://api.pimo.studio/api/v1/models', formData, axiosConfig)).data.success;
             if (result) {
                resetForm();
                setSubmitting(false);
