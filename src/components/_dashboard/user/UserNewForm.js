@@ -152,18 +152,17 @@ export default function UserNewForm({ isEdit, currentUser }) {
             var result = false
             const accessToken = JSCookies.get('jwt')
             const formData = new FormData()
-            formData.append('avatar', values.avatarUrl.file)
-            formData.append('name', values.name)
-            formData.append('email', values.email)
-            formData.append('phoneNumber', values.phoneNumber)
-            formData.append('country', values.country)
-            formData.append('state', values.state)
-            formData.append('city', values.city)
-            formData.append('sex', values.sex)
-            formData.append('gift', values.company)
-            formData.append('dateOfBirth', values.DOB)
-            formData.append('address', values.role)
-            formData.append('salary', values.salary)
+            formData.append('imageAvatar', values.avatarUrl.file)
+            formData.append('Name', values.name)
+            formData.append('Mail', values.email)
+            formData.append('Phone', values.phoneNumber)
+            formData.append('Country', values.country)
+            formData.append('Province', values.state)
+            formData.append('District', values.role + ', ' + values.city)
+            formData.append('GenderId', values.sex)
+            formData.append('Gifted', values.company)
+            formData.append('DateOfBirth', values.DOB)
+            formData.append('Salary', values.salary)
             formData.append('description', values.description)
             formData.append('height', values.height)
             formData.append('weight', values.weight)
@@ -175,9 +174,9 @@ export default function UserNewForm({ isEdit, currentUser }) {
             formData.append('eyeColor', values.eyeColor)
             formData.append('style', values.style)
             formData.append('voice', values.voice)
-            formData.append('facebookLink', values.facebookLink)
-            formData.append('instagramLink', values.instagramLink)
-            formData.append('twitterLink', values.twitterLink)
+            formData.append('Facebook', values.facebookLink)
+            formData.append('Instagram', values.instagramLink)
+            formData.append('Twitter', values.twitterLink)
             let axiosConfig = {
                headers: {
                   "Content-Type": "multipart/form-data; boundary=AaB03x" +
@@ -571,8 +570,8 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               className={classes.disabledInput}
                            />
                         </Stack>
-                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }} style={{ justifyContent: 'space-between', width: '95%', marginTop: '4%' }}>
-                           Mức lương (VND):
+                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }} style={{ justifyContent: 'space-between', width: '94%', marginTop: '4%' }}>
+                           <span style={{width: '30%'}}>Mức lương (VND):</span>
                            <Slider
                               step={500000}
                               max={50000000}
@@ -581,7 +580,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               {...getFieldProps('salary')}
                               getAriaValueText={valueLabelFormat}
                               valueLabelFormat={valueLabelFormat}
-                              style={{ width: '80%' }}
+                              style={{ width: '100%'}}
                            />
                         </Stack>
                         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
