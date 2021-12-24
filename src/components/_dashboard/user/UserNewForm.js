@@ -12,6 +12,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import Slider from '@mui/material/Slider';
 // material
 import { LoadingButton } from '@material-ui/lab';
 import {
@@ -70,6 +71,21 @@ const genresList = [
    { title: 'Đồ bơi' },
 ]
 
+const voice = [
+   { title: 'Giọng Bắc' },
+   { title: 'Giọng Nam' },
+   { title: 'Giọng Anh-Anh' },
+   { title: 'Giọng Anh-Mỹ' },
+]
+
+function valueLabelFormat(value) {
+   const units = ['VNĐ', 'USD'];
+
+   let unitIndex = 0;
+
+   return `${value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} ${units[unitIndex]}`;
+}
+
 export default function UserNewForm({ isEdit, currentUser }) {
    const navigate = useNavigate();
    const { enqueueSnackbar } = useSnackbar();
@@ -77,9 +93,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       name: Yup.string().required('Tên là bắt buộc'),
       email: Yup.string().required('Email là bắt buộc').email(),
       phoneNumber: Yup.string().required('Điện thoại là bắt buộc'),
-      // address: Yup.string().required('Tỉnh là bắt buộc'),
       country: Yup.string().required('Quốc gia là bắt buộc'),
-      // company: Yup.string().required('Công ty là bắt buộc'),
       DOB: Yup.string().required('Ngày sinh là bắt buộc'),
       sex: Yup.string().required('Giới tính là bắt buộc'),
       role: Yup.string().required('Địa chỉ là bắt buộc'),
@@ -88,11 +102,13 @@ export default function UserNewForm({ isEdit, currentUser }) {
       skinColor: Yup.string().required('Màu da là bắt buộc'),
       hairColor: Yup.string().required('Màu tóc là bắt buộc'),
       eyeColor: Yup.string().required('Màu mắt là bắt buộc'),
-      style: Yup.string().required('Phong cách là bắt buộc'),
+      // style: Yup.string().required('Phong cách là bắt buộc'),
       bust: Yup.string().required('Vòng 1 là bắt buộc'),
       waist: Yup.string().required('Vòng 2 là bắt buộc'),
       hips: Yup.string().required('Vòng 3 là bắt buộc'),
-      // avatarUrl: Yup.mixed().required('Avatar là bắt buộc')
+      voice: Yup.string().required('Giọng nói là bắt buộc'),
+      style: Yup.array().required('Phong cách là bắt buộc'),
+      avatarUrl: Yup.mixed().required('Avatar là bắt buộc')
    });
 
    const formik = useFormik({
@@ -102,7 +118,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
          name: currentUser?.name || '',
          email: currentUser?.email || '',
          phoneNumber: currentUser?.phoneNumber || '',
-         address: currentUser?.address || '',
          country: currentUser?.country || '',
          state: currentUser?.state || '',
          city: currentUser?.city || '',
@@ -123,60 +138,101 @@ export default function UserNewForm({ isEdit, currentUser }) {
          hairColor: currentUser?.hairColor || '',
          eyeColor: currentUser?.eyeColor || '',
          style: currentUser?.style || '',
+         voice: currentUser?.voice || '',
+         salary: currentUser?.salary || 0,
+         description: currentUser?.description || '',
+         facebookLink: currentUser?.facebookLink || '',
+         instagramLink: currentUser?.instagramLink || '',
+         twitterLink: currentUser?.twitterLink || '',
       },
       validationSchema: NewUserSchema,
       onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+         console.log("is onSubmit");
          try {
-            if (values.status === 'active' || values.status === undefined) {
-               values.status = true;
-            } else {
-               values.status = false;
-            }
             var result = false
             const accessToken = JSCookies.get('jwt')
-            if (isEdit === false) {
-               var postData = {
-                  name: values.name,
-                  genderId: Number(values.city),
-                  dateOfBirth: values.DOB,
-                  country: values.country,
-                  province: values.address,
-                  district: values.role,
-                  phone: values.phoneNumber,
-                  mail: values.email,
-                  gifted: values.company,
-               };
-               let axiosConfig = {
-                  headers: {
-                     'Content-Type': 'application/json;charset=UTF-8',
-                     "Access-Control-Allow-Origin": "*",
-                     'authorization': 'Bearer ' + accessToken
-                  }
-               };
-               result = (await axios.post('https://api.pimo.studio/api/v1/models', postData, axiosConfig)).data.success;
-            } else {
-               postData = {
-                  id: values.id,
-                  name: values.name,
-                  genderId: Number(values.city),
-                  dateOfBirth: values.DOB,
-                  country: values.country,
-                  province: values.address,
-                  district: values.role,
-                  phone: values.phoneNumber,
-                  mail: values.email,
-                  gifted: values.company,
-               };
-               let axiosConfig = {
-                  headers: {
-                     'Content-Type': 'application/json;charset=UTF-8',
-                     "Access-Control-Allow-Origin": "*",
-                     'authorization': 'Bearer ' + accessToken
-                  }
-               };
-               result = (await axios.put('https://api.pimo.studio/api/v1/models', postData, axiosConfig));
-            }
-
+            const formData = new FormData()
+            formData.append('avatar', values.avatarUrl.file)
+            formData.append('name', values.name)
+            formData.append('email', values.email)
+            formData.append('phoneNumber', values.phoneNumber)
+            formData.append('country', values.country)
+            formData.append('state', values.state)
+            formData.append('city', values.city)
+            formData.append('sex', values.sex)
+            formData.append('gift', values.company)
+            formData.append('dateOfBirth', values.DOB)
+            formData.append('address', values.role)
+            formData.append('salary', values.salary)
+            formData.append('description', values.description)
+            formData.append('height', values.height)
+            formData.append('weight', values.weight)
+            formData.append('bust', values.bust)
+            formData.append('waist', values.waist)
+            formData.append('hips', values.hips)
+            formData.append('skinColor', values.skinColor)
+            formData.append('hairColor', values.hairColor)
+            formData.append('eyeColor', values.eyeColor)
+            formData.append('style', values.style)
+            formData.append('voice', values.voice)
+            formData.append('facebookLink', values.facebookLink)
+            formData.append('instagramLink', values.instagramLink)
+            formData.append('twitterLink', values.twitterLink)
+            let axiosConfig = {
+               headers: {
+                  "Content-Type": "multipart/form-data; boundary=AaB03x" +
+                     "--AaB03x" +
+                     "Content-Disposition: file" +
+                     "Content-Type: png" +
+                     "Content-Transfer-Encoding: binary" +
+                     "...data... " +
+                     "--AaB03x--",
+                  "Accept": "application/json",
+                  "type": "formData",
+                  'authorization': 'Bearer ' + accessToken
+               }
+            };
+            // var postData = {
+            //    name: values.name,
+            //    genderId: Number(values.city),
+            //    dateOfBirth: values.DOB,
+            //    country: values.country,
+            //    province: values.address,
+            //    district: values.role,
+            //    phone: values.phoneNumber,
+            //    mail: values.email,
+            //    gifted: values.company,
+            // };
+            // let axiosConfig = {
+            //    headers: {
+            //       'Content-Type': 'application/json;charset=UTF-8',
+            //       "Access-Control-Allow-Origin": "*",
+            //       'authorization': 'Bearer ' + accessToken
+            //    }
+            // };
+            result = (await axios.post('https://api.pimo.studio/api/v1/models', formData, axiosConfig)).data.success;
+            // console.log(formData.get('avatar'));
+            // console.log(formData.get('name'));
+            // console.log(formData.get('email'));
+            // console.log(formData.get('phoneNumber'));
+            // console.log(formData.get('country'));
+            // console.log(formData.get('state'));
+            // console.log(formData.get('city'));
+            // console.log(formData.get('sex'));
+            // console.log(formData.get('gift'));
+            // console.log(formData.get('dateOfBirth'));
+            // console.log(formData.get('description'));
+            // console.log(formData.get('height'));
+            // console.log(formData.get('weight'));
+            // console.log(formData.get('bust'));
+            // console.log(formData.get('waist'));
+            // console.log(formData.get('hips'));
+            // console.log(formData.get('skinColor'));
+            // console.log(formData.get('hairColor'));
+            // console.log(formData.get('eyeColor'));
+            // console.log(formData.get('style'));
+            // console.log(formData.get('voice'));
+            // console.log(formData.get('salary'));
             // await fakeRequest(500);
             if (result) {
                resetForm();
@@ -202,7 +258,8 @@ export default function UserNewForm({ isEdit, currentUser }) {
          if (file) {
             setFieldValue('avatarUrl', {
                ...file,
-               preview: URL.createObjectURL(file)
+               preview: URL.createObjectURL(file),
+               file: file,
             });
          }
       },
@@ -240,7 +297,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
 
    useEffect(() => {
       if (getFieldProps('country').value !== '') {
-         console.log(getFieldProps('country').value);
          fetch('https://countriesnow.space/api/v0.1/countries/states', {
             method: 'POST',
             headers: {
@@ -262,7 +318,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
 
    useEffect(() => {
       if (getFieldProps('state').value !== '') {
-         console.log(getFieldProps('state').value);
          fetch('https://countriesnow.space/api/v0.1/countries/state/cities', {
             method: 'POST',
             headers: {
@@ -281,10 +336,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
             });
       }
    }, [getFieldProps('state').value])
-
-   useEffect(() => {
-      console.log(cities);
-   }, [cities])
 
    return (
       <FormikProvider value={formik}>
@@ -323,6 +374,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                                  <br /> với kích thước tối đa {fData(3145728)}
                               </Typography>
                            }
+                           disabled={isEdit}
                         />
                         <FormHelperText error sx={{ px: 2, textAlign: 'center' }}>
                            {touched.avatarUrl && errors.avatarUrl}
@@ -336,7 +388,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                            <TextField
                               fullWidth
                               label="Địa chỉ Facebook"
-                              // {...getFieldProps('email')}
+                              {...getFieldProps('facebookLink')}
                               className={classes.disabledInput}
                            />
                         </Stack>
@@ -347,7 +399,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                            <TextField
                               fullWidth
                               label="Địa chỉ Instagram"
-                              // {...getFieldProps('email')}
+                              {...getFieldProps('instagramLink')}
                               className={classes.disabledInput}
                            />
                         </Stack>
@@ -358,11 +410,11 @@ export default function UserNewForm({ isEdit, currentUser }) {
                            <TextField
                               fullWidth
                               label="Địa chỉ Twitter"
-                              // {...getFieldProps('email')}
+                              {...getFieldProps('twitterLink')}
                               className={classes.disabledInput}
                            />
                         </Stack>
-                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                        {/* <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                            <div style={{ alignSelf: 'center' }}>
                               <YouTubeIcon style={{ color: '#e52d27' }} />
                            </div>
@@ -372,7 +424,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               // {...getFieldProps('email')}
                               className={classes.disabledInput}
                            />
-                        </Stack>
+                        </Stack> */}
                      </Stack>
                   </Card>
                </Grid>
@@ -391,7 +443,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                            />
                            <TextField
                               fullWidth
-                              label="Địa chỉ email"
+                              label="Email"
                               {...getFieldProps('email')}
                               error={Boolean(touched.email && errors.email)}
                               helperText={touched.email && errors.email}
@@ -500,55 +552,40 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               className={classes.disabledInput}
                            />
                         </Stack>
-                        {isEdit && (
-                           <>
-                              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                                 <TextField
-                                    // {...getFieldProps('state')}
-                                    value={(new Date(values.DOB)).toLocaleDateString('vi-vn')}
-                                    fullWidth
-                                    label='Ngày sinh'
-                                    error={Boolean(touched.DOB && errors.DOB)}
-                                    helperText={touched.DOB && errors.DOB}
-                                    setValue={setFieldValue}
-                                    className={classes.disabledInput}
-                                 />
-                                 <TextField
-                                    fullWidth
-                                    label="Địa chỉ"
-                                    {...getFieldProps('role')}
-                                    error={Boolean(touched.role && errors.role)}
-                                    helperText={touched.role && errors.role}
-                                    className={classes.disabledInput}
-                                 />
-                              </Stack>
-                           </>
-                        )}
-                        {!isEdit && (
-                           <>
-                              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                                 <DateTime
-                                    {...getFieldProps('DOB')}
-                                    value={(new Date())}
-                                    label='Ngày sinh'
-                                    error={Boolean(touched.DOB && errors.DOB)}
-                                    helperText={touched.DOB && errors.DOB}
-                                    setValue={setFieldValue}
-                                    disabled={isEdit}
-                                 />
-                                 <TextField
-                                    fullWidth
-                                    label="Địa chỉ"
-                                    {...getFieldProps('role')}
-                                    error={Boolean(touched.role && errors.role)}
-                                    helperText={touched.role && errors.role}
-                                    disabled={isEdit}
-                                 />
-                              </Stack>
-                           </>
-                        )}
                         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                           <TextField rows={4} fullWidth multiline label="Mô tả bản thân" />
+                           <DateTime
+                              {...getFieldProps('DOB')}
+                              // value={(new Date())}
+                              label='Ngày sinh'
+                              error={Boolean(touched.DOB && errors.DOB)}
+                              helperText={touched.DOB && errors.DOB}
+                              setValue={setFieldValue}
+                              className={classes.disabledInput}
+                           />
+                           <TextField
+                              fullWidth
+                              label="Địa chỉ"
+                              {...getFieldProps('role')}
+                              error={Boolean(touched.role && errors.role)}
+                              helperText={touched.role && errors.role}
+                              className={classes.disabledInput}
+                           />
+                        </Stack>
+                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }} style={{ justifyContent: 'space-between', width: '95%', marginTop: '4%' }}>
+                           Mức lương (VND):
+                           <Slider
+                              step={500000}
+                              max={50000000}
+                              valueLabelDisplay="on"
+                              disabled={isEdit}
+                              {...getFieldProps('salary')}
+                              getAriaValueText={valueLabelFormat}
+                              valueLabelFormat={valueLabelFormat}
+                              style={{ width: '80%' }}
+                           />
+                        </Stack>
+                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                           <TextField rows={4} fullWidth multiline label="Mô tả bản thân" {...getFieldProps('description')} />
                         </Stack>
                      </Stack>
                   </Card>
@@ -586,6 +623,26 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               helperText={touched.weight && errors.weight}
                               className={classes.disabledInput}
                            />
+                           <TextField
+                              select
+                              fullWidth
+                              label="Giọng nói"
+                              placeholder="Giọng nói"
+                              {...getFieldProps('voice')}
+                              SelectProps={{ native: true }}
+                              error={Boolean(touched.voice && errors.voice)}
+                              helperText={touched.voice && errors.voice}
+                              className={classes.disabledInput}
+                           >
+                              <option value="" />
+                              {
+                                 voice.map((option) => (
+                                    <option value={option.title}>
+                                       {option.title}
+                                    </option>
+                                 ))
+                              }
+                           </TextField>
                         </Stack>
 
                         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
@@ -694,63 +751,31 @@ export default function UserNewForm({ isEdit, currentUser }) {
                               }
                            </TextField>
                         </Stack>
-                        {isEdit && (
-                           <>
-                              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                                 <TextField
-                                    // {...getFieldProps('state')}
-                                    value={(new Date(values.DOB)).toLocaleDateString('vi-vn')}
-                                    fullWidth
-                                    label='Ngày sinh'
-                                    error={Boolean(touched.DOB && errors.DOB)}
-                                    helperText={touched.DOB && errors.DOB}
-                                    setValue={setFieldValue}
-                                    className={classes.disabledInput}
-                                 />
-                                 <TextField fullWidth label="Mã vùng" {...getFieldProps('zipCode')}
-                                    className={classes.disabledInput} />
-                              </Stack>
-
-                              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                                 <TextField
-                                    fullWidth
-                                    label="Tài năng"
-                                    {...getFieldProps('company')}
-                                    error={Boolean(touched.company && errors.company)}
-                                    helperText={touched.company && errors.company}
-                                    className={classes.disabledInput}
-                                 />
-                                 <TextField
-                                    fullWidth
-                                    label="Địa chỉ"
-                                    {...getFieldProps('role')}
-                                    error={Boolean(touched.role && errors.role)}
-                                    helperText={touched.role && errors.role}
-                                    className={classes.disabledInput}
-                                 />
-                              </Stack>
-                           </>
-                        )}
-                        {!isEdit && (
-                           <>
-                              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                                 <Autocomplete
-                                    fullWidth
-                                    multiple
-                                    options={genresList}
-                                    disableCloseOnSelect
-                                    getOptionLabel={(option) => option.title}
-                                    renderOption={(props, option, { selected }) => (
-                                       <li {...props}>
-                                          <Checkbox checked={selected} />
-                                          {option.title}
-                                       </li>
-                                    )}
-                                    renderInput={(params) => <TextField {...params} label="Phong cách" />}
-                                 />
-                              </Stack>
-                           </>
-                        )}
+                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                           <Autocomplete
+                              fullWidth
+                              multiple
+                              options={genresList}
+                              onChange={(event, value) => {
+                                 setFieldValue('style', value);
+                              }}
+                              disableCloseOnSelect
+                              getOptionLabel={(option) => option.title}
+                              renderOption={(props, option, { selected }) => (
+                                 <li {...props}>
+                                    <Checkbox checked={selected} />
+                                    {option.title}
+                                 </li>
+                              )}
+                              renderInput={(params) => <TextField
+                                 {...params}
+                                 label="Phong cách"
+                                 error={Boolean(touched.style && errors.style)}
+                                 helperText={touched.style && errors.style}
+                                 className={classes.disabledInput}
+                              />}
+                           />
+                        </Stack>
                      </Stack>
                   </Card>
                   {!isEdit ? (

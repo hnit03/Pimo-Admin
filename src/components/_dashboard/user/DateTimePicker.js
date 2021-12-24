@@ -31,7 +31,7 @@ export default function BasicDateTimePicker({
             label={label}
             value={value}
             onChange={(newValue) => {
-               setValue('state', newValue);
+               setValue('DOB', newValue);
             }}
          />
       </LocalizationProvider>
